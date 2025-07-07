@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ type }}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <form action="/presupuestos" method="post" class="container py-4 needs-validation mb-2" style="background: #f8f9fa; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);" novalidate>
+
+        <table class="table table-hover table-sm table-light">
+            <thead>
+                <tr>
+                    <th scope="col">Cant.</th>
+                    <th scope="col">Código</th>
+                    <th scope="col">Valor unitario</th>
+                    <th scope="col">Efectivo</th>
+                    <th scope="col">Factura</th>
+                    <th scope="col">Tarjeta</th>
+                    <th scope="col">Local</th>
+                    <th scope="col">#</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <!-- Parte de la tabla que hay que ITERAR con la base de datos del día de la fecha --> 
+                
+                <tr>
+                    <td scope="row">
+                        <input type="number" class="form-control" style="max-width: 50px;" id="cantidad" name="cantidad">
+                    </td>
+                    <td>
+                        <select class="form-select" name="codigo" required>
+                            <option value="" selected>Código</option>
+                            <!-- {% for local in locales %}
+                            <option value="{{ local.nombre }}">{{ local.nombre }}</option>
+                            {% endfor %} -->
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" id="precio" name="precio" readonly disabled>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" id="efectivo" name="efectivo" readonly disabled>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" id="factura" name="factura" readonly disabled>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" id="tarjeta" name="tarjeta" readonly disabled>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" id="tarjeta" name="Local" readonly style="max-width: 50px;" readonly disabled>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-dark">+</button>
+                    </td>
+                </tr>
+            
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">
+                        <div class="text-wrap">
+                                <span class="d-none d-md-inline">Mano de obra exenta</span>
+                                <span class="d-inline d-md-none">MO Ex.</span>
+                        </div>  
+                    </th>
+                    <th scope="col">M Obra</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+
+                </tr>
+            </thead>
+                <tr>
+                    <td scope="row">
+                        <input type="number" class="form-control" style="max-width: 50px;" id="cantidad" name="cantidad">
+                    </td>
+                    <td>
+                        <input type="Text" class="form-control" id="mobra" name="mobra">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" id="precio" name="precio">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" id="efectivo" name="efectivo" readonly disabled>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" id="factura" name="factura" readonly disabled>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" id="tarjeta" name="tarjeta" readonly disabled>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" id="tarjeta" name="Local" style="max-width: 50px;" readonly disabled>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-dark">+</button>
+                    </td>
+                </tr>
+                
+            <thead>
+                <tr>
+                    <th scope="col" colspan="3" class="text-center">TOTAL</th>
+                    <th scope="col">
+                        <input type="number" class="form-control" id="tarjeta" name="Efectivo" readonly disabled >
+                    </th>
+                    <th scope="col">
+                        <input type="number" class="form-control" id="tarjeta" name="Factura" readonly disabled>
+                    </th>
+                    <th scope="col">
+                        <input type="number" class="form-control" id="tarjeta" name="Tarjeta" readonly disabled>
+                    </th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+
+                </tr>
+            </thead>
+
+            </tbody>
+        </table>            
+
+        <div class="d-flex justify-content-center mt-3">
+            <button class="btn btn-dark" type="submit">Exportar como PDF</button>
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

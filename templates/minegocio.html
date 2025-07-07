@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ type }}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-4">
+            <div class="container" style="border: 1px solid #ddd; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+                <H1>{{ nombre }}</H1>
+
+                <div class="d-grid">
+                    <a href="/cargadiaria" class="btn btn-dark mt-3">Carga Diaria</a>
+                    <a href="/presupuestos" class="btn btn-dark mt-3">Presupuestos</a>
+                    <a href="/listaprecios" class="btn btn-dark mt-3">Lista de precios</a>
+                    <a href="/stock" class="btn btn-dark mt-3 mb-2">Control de stock</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-auto">
+            
+        </div>
+        <div class="col col-lg-4">
+            <div class="container" style="border: 1px solid #ddd; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+                <div class="container mt-3 mb-2" style="border: 1px solid #ddd; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+                    <h3>Tablero de novedades</h3>
+                    <div class="container mt-3 mb-2" style="border: 1px solid #ddd; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+                        Sin novedades el día de hoy
+                    </div>
+                </div>
+
+                <div class="container mt-3 mb-2" style="border: 1px solid #ddd; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+                    <h3>Tareas para el día de hoy:</h3>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheck1">
+                        <label class="form-check-label" for="flexCheck1">
+                            Tarea Nro 1 a realizar
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheck2">
+                        <label class="form-check-label" for="flexCheck2">
+                            Tarea Nro 2 a realizar
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

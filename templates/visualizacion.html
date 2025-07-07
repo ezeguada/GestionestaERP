@@ -1,0 +1,144 @@
+ {% extends "layout.html" %}
+
+{% block title %}
+    Visualización de cajas
+{% endblock %}
+
+{% block body %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Configurar el formateador de moneda
+        const formatter = new Intl.NumberFormat('es-CL', {
+            style: 'currency',
+            currency: 'CLP',
+            minimumFractionDigits: 1,
+        });
+
+        // Seleccionar todas las celdas que necesitan formateo
+        const moneyCells = document.querySelectorAll('.money');
+
+        // Aplicar el formato a cada celda
+        moneyCells.forEach(cell => {
+            const value = parseInt(cell.textContent, 10); // Convertir el contenido a un número entero
+            if (!isNaN(value)) {
+                cell.textContent = formatter.format(value); // Formatear como moneda
+            }
+        });
+    });
+</script>
+<div class="container">
+
+    <form action="/filtrarvisualizacion" method="GET" class="container py-2" style="max-width: 900Px; background: #f8f9fa; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="row mb-1 g-2 align-items-end">
+            <div class="col-12 col-md-2">
+                <select id="mes" name="mes" class="form-select">
+                    <option selected disabled>Mes</option>
+                    <option value="01">Enero</option>
+                    <option value="02">Febrero</option>
+                    <option value="03">Marzo</option>
+                    <option value="04">Abril</option>
+                    <option value="05">Mayo</option>
+                    <option value="06">Junio</option>
+                    <option value="07">Julio</option>
+                    <option value="08">Agosto</option>
+                    <option value="09">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-2">
+                <select id="anio" name="anio" class="form-select">
+                    <option selected disabled>Año</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-3">
+                <select id="local" name="local" class="form-select">
+                    <option selected disabled>Selecciona el Local</option>
+                    {% for local in locales %}
+                        <option value="{{ local.nombre }}">{{ local.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 col-md-3">
+                <select id="idencargada" name="idencargada" class="form-select">
+                    <option selected disabled>Nombre de Encargada</option>
+                    {% for encargada in encargadas %}
+                    <option value="{{ encargada.id }}">{{ encargada.nombre }} {{ encargada.apellido }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 col-md-2">
+                <button type="submit" class="btn btn-dark w-100">Filtrar</button>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="row">
+        {% for caja in cajas %}
+            <div class="col-md-4 d-flex align-items-stretch">
+                <div class="card text-dark bg-light rounded-3 bg-gradient my-3 mx-auto shadow-lg" style="width: 100%; max-width: 20rem;">
+                    {% if caja.checkeado == 0 %}
+                        <span class="badge bg-danger">Sin checkear</span>
+                    {% else %}
+                        <span class="badge bg-success">Checkeado</span>
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h4 class="card-title text-center mb-2">{{ caja.fecha }}</h4>
+                        <h4 class="card-title text-center mb-2">{{ caja.local }}</h4>
+                        <h5 class="card-title text-center mb-2">{{ caja.turno }}</h5>
+                        <p class="card-text text-center mb-2">Encargada: {{ caja.nombre_encargada }}</p>
+                        <table class="table table-bordered table-sm align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="text-center">Total Cierre</th>
+                                    <th class="text-center">Total Sistema</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center text-dark"><span class="money">{{ caja.totalcierre }}</span></td>
+                                    <td class="text-center text-dark"><span class="money">{{ caja.totalsistema }}</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center text-dark">Diferencia de caja</td>
+                                    <td class="text-center text-dark">
+                                        <span class="money">
+                                            {% if caja.totalcheckeado is none %}
+                                                {% if caja.totalsistema == 0 %}
+                                                    {{ caja.sobranteefectivo + caja.faltanteefectivo + caja.sobranteposnet + caja.faltanteposnet }}
+                                                {% else %}
+                                                    {{ (caja.totalcierre - caja.totalsistema)|abs }}
+                                                {% endif %}
+                                            {% else %}
+                                                {{ caja.totalcheckeado|abs }}
+                                            {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt-auto d-flex justify-content-center">
+                            <form method="POST" action="/checkdecaja">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="idcaja" value="{{ caja.id }}">
+                                <button type="submit" class="btn btn-dark">
+                                    {% if session["user_level"] == 794652315647 %}
+                                        Ver detalles / Checkear
+                                    {% else %}
+                                        Ver detalles
+                                    {% endif %}
+                                </button>
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

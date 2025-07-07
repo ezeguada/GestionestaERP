@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Profile
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+    <h1 class="text-center">Hello {{ user[0]["username"] }}</h1>
+
+    <h4 class="text-center">Your purchases:</h1>
+
+    <ol class="list-group list-group-numbered">
+        {% for purchase in purchases %}
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">{{ purchase.scriptname }}</div>
+                Link: <a href="{{ purchase.link }}">{{ purchase.link }}</a>
+            </div>
+            <span class="badge bg-primary rounded-pill">
+                {% for script in scripttype %}
+                    {% if script.product_id == purchase.itemID %}
+                        {{ script.type }}
+                    {% endif %}
+                {% endfor %}
+            </span>
+        </li>
+        {% endfor %}
+    </ol>
+
+
+
+</div>
+{% endblock %}

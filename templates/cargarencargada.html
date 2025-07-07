@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ type }}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h4 class="text-center mb-4">Crear Nueva Encargada</h4>
+    <form action="/cargarencargada" method="post" class="mx-auto p-4 bg-light rounded shadow" style="max-width: 400px;">
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input
+                type="text"
+                id="nombre"
+                name="nombre"
+                class="form-control"
+                placeholder="Nombre"
+                autocomplete="off"
+                autofocus
+            />
+        </div>
+        <div class="mb-3">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input
+                type="text"
+                id="apellido"
+                name="apellido"
+                class="form-control"
+                placeholder="Apellido"
+                autocomplete="off"
+            />
+        </div>
+
+
+
+
+
+
+
+
+
+
+        <div class="mb-3">
+            <label for="apellido" class="form-label">Fecha de nacimiento</label>
+            <input
+                type="text"
+                id="apellido"
+                name="apellido"
+                class="form-control"
+                placeholder="Apellido"
+                autocomplete="off"
+            />
+        </div>
+        <div class="mb-3">
+            <label for="apellido" class="form-label">DNI</label>
+            <input
+                type="text"
+                id="apellido"
+                name="apellido"
+                class="form-control"
+                placeholder="Apellido"
+                autocomplete="off"
+            />
+        </div>
+        <div class="mb-3">
+            <label for="apellido" class="form-label">Domicilio</label>
+            <input
+                type="text"
+                id="apellido"
+                name="apellido"
+                class="form-control"
+                placeholder="Apellido"
+                autocomplete="off"
+            />
+        </div>
+        <div class="mb-3">
+            <label for="apellido" class="form-label">Fecha de ingreso</label>
+            <input
+                type="text"
+                id="apellido"
+                name="apellido"
+                class="form-control"
+                placeholder="Apellido"
+                autocomplete="off"
+            />
+        </div>
+        <div class="mb-3">
+            <label for="apellido" class="form-label">Teléfono</label>
+            <input
+                type="text"
+                id="apellido"
+                name="apellido"
+                class="form-control"
+                placeholder="Apellido"
+                autocomplete="off"
+            />
+        </div>
+        <div class="mb-3">
+            <label for="fotoperfil" class="form-label">Foto de perfil</label>
+            <input 
+                type="file" 
+                class="form-control" 
+                id="fotoperfil"
+                name="fotoperfil"
+                placeholder="fotoperfil"
+            />
+        </div>
+
+
+
+
+
+
+        <div class="mb-3">
+            <label for="local" class="form-label">Selecciona el Local</label>
+            <select id="local" name="local" class="form-select">
+                <option selected disabled>Selecciona el Local</option>
+                {% for local in locales %}
+                <option value="{{ local.nombre }}">{{ local.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="bonodecaja" class="form-label">Bono de caja</label>
+            <input
+                type="number"
+                id="bonodecaja"
+                name="bonodecaja"
+                class="form-control"
+                placeholder="0"
+                autocomplete="off"
+            />
+        </div>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-dark">Guardar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

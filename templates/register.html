@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h4 class="text-center mb-4">Crear Nuevo usuario</h4>
+        <form action="/register" method="post" class="mx-auto p-4 bg-light rounded shadow" style="max-width: 400px;">
+
+            <div class="mb-3 mt-3">
+                <input autocomplete="off" autofocus class="form-control" id="username" name="username" placeholder="Nombre de usuario" type="text">
+            </div>
+
+            <div class="mb-3">
+                <input class="form-control" id="password" name="password" placeholder="Contraseña" type="password">
+            </div>
+
+            <div class="mb-3">
+                <input class="form-control" id="password2" name="confirmation" placeholder="Repetir contraseña" type="password">
+            </div>
+
+            <div class="mb-3">
+                <select class="form-select" name="nivel">
+                    <option selected>Nivel de acceso</option>
+                        <option value="encargada">Encargada</option>
+                        <option value="administrador">Administrador</option>
+                        {% if session["user_level"] == 794652315647 %}
+                        <option value="boss">Boss</option>
+                        {% endif %}
+                </select>
+            </div>
+
+            <div class="d-grid">
+                <button class="btn btn-dark" type="submit">Crear usuario</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

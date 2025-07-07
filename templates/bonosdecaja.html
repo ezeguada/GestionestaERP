@@ -1,0 +1,163 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Estadísticas de cajas
+{% endblock %}
+
+{% block body %}
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const formatter = new Intl.NumberFormat('es-CL', {
+        style: 'currency',
+        currency: 'CLP',
+        minimumFractionDigits: 1
+    });
+
+    // Formatear montos iniciales
+    document.querySelectorAll('.money').forEach(cell => {
+        const value = parseFloat(cell.textContent);
+        if (!isNaN(value)) cell.textContent = formatter.format(value);
+    });
+
+    // Elementos clave
+    const bonoCell = document.getElementById('bono-final');
+    const totalCell = document.getElementById('total-diferencias');
+    const checkboxes = document.querySelectorAll('.form-check-input');
+    const bonoOriginal = parseFloat(document.getElementById('bono-caja-valor').dataset.bono);
+
+    function calcularTotales() {
+        let totalDiferencias = 0;
+
+        checkboxes.forEach((checkbox, index) => {
+            if (checkbox.checked) {
+                const diferencia = checkbox.closest('tr').querySelector('td:nth-child(3) p').textContent;
+                const valor = parseFloat(diferencia.replace(/[^0-9,-]/g, '').replace(',', '.'));
+                if (!isNaN(valor)) totalDiferencias += valor;
+            }
+        });
+
+        // Actualizar total de diferencias
+        totalCell.textContent = formatter.format(totalDiferencias);
+        
+        // Calcular y mostrar bono final
+        const bonoFinal = bonoOriginal - totalDiferencias;
+        bonoCell.textContent = formatter.format(bonoFinal);
+    }
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', calcularTotales);
+    });
+
+    calcularTotales(); // Inicializar
+});
+</script>
+
+<form action="/bonosdecaja" method="get" class="mx-auto p-4 bg-light rounded shadow" style="max-width: 400px;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <h4 class="text-center mb-2">Seleccionar Encargada</h4>
+    <div class="mb-3">
+        
+        <select id="idencargada" name="idencargada" class="form-select">
+            <option selected disabled>Nombre de Encargada</option>
+            {% for encargada in encargadas %}
+            <option value="{{ encargada.id }}">{{ encargada.nombre }} {{ encargada.apellido }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <h4 class="text-center mb-2">Seleccionar Mes</h4>
+        <select id="mes" name="mes" class="form-select">
+            <option selected disabled>Mes</option>
+            <option value="01">Enero</option>
+            <option value="02">Febrero</option>
+            <option value="03">Marzo</option>
+            <option value="04">Abril</option>
+            <option value="05">Mayo</option>
+            <option value="06">Junio</option>
+            <option value="07">Julio</option>
+            <option value="08">Agosto</option>
+            <option value="09">Septiembre</option>
+            <option value="10">Octubre</option>
+            <option value="11">Noviempre</option>
+            <option value="12">Diciempre</option>
+        </select>
+    </div>
+    <div class="d-grid">
+        <button type="submit" class="btn btn-dark">Seleccionar</button>
+    </div>
+</form>
+  
+<div class="container mb-4">
+    <h5 class="fw-bold text-primary">Diferencias de caja</h5>
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Fecha</th>
+                <th>Nombre</th>
+                <th>Diferencia de caja</th>
+                <th>Sumar</th>
+                <th>Checkeado</th>
+                <th>Detalles</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cajas in caja %}
+            <tr>
+                <td><label class="">{{ cajas.fecha }}</label></td>
+                <td><label class="">{{ cajas.nombre_encargada }}</label></td>
+                <td>
+                    <p class="money">
+                        {% if cajas.totalcheckeado is none %}
+                            {% if cajas.totalsistema == 0 %}
+                                {{ cajas.sobranteefectivo + cajas.faltanteefectivo + cajas.sobranteposnet + cajas.faltanteposnet }}
+                            {% else %}
+                                {{ (cajas.totalcierre - cajas.totalsistema)|abs }}
+                            {% endif %}
+                        {% else %}
+                            {{ cajas.totalcheckeado|abs }}
+                        {% endif %}
+                    </p>
+                </td>
+                <td>
+                    <input class="form-check-input" type="checkbox" value="" id="checkbox" checked>
+                </td>
+                <td>
+                    {% if cajas.checkeado == 0 %}
+                        <span class="badge bg-danger">Sin checkear</span>
+                    {% else %}
+                        <span class="badge bg-success">Checkeado</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="mt-auto d-flex justify-content-center">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <form method="POST" action="/checkdecaja">
+                            <input type="hidden" name="idcaja" value="{{ cajas.id }}">
+                            <button type="submit" class="btn btn-dark">Ver detalles</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+            <tr class="table-info">
+                <th scope="row" colspan="2">Total</th>
+                <td><label id="total-diferencias" class="money">0</label></td>
+                <th scope="row" colspan="2">Bono Final</th>
+                <td><label id="bono-final" class="money">0</label></td>
+            </tr>
+            
+            <!-- Fila original del bono (oculta o mantenida como referencia) -->
+            <tr class="d-none">
+                <td>Bono Original:</td>
+                <td class="money" id="bono-caja-valor" data-bono="{{ bono[0]['bonodecaja'] }}">
+                    {{ bono[0]["bonodecaja"] }}
+                </td>
+            </tr>
+           
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

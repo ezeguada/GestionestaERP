@@ -1,0 +1,400 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ type }}
+{% endblock %}
+
+{% block body %}
+<script>
+
+    function sumar() {
+        let numero1 = document.getElementById('importevisa1').value;
+        let numero2 = document.getElementById('importevisa2').value;
+        let numero3 = document.getElementById('importevisa3').value;
+        let numero4 = document.getElementById('importevisa4').value;
+        let numero5 = document.getElementById('importeqr').value;
+
+        let numero6 = document.getElementById('total20m').value;
+        let numero7 = document.getElementById('total10m').value;
+        let numero8 = document.getElementById('total2m').value;
+        let numero9 = document.getElementById('total1m').value;
+        let numero10 = document.getElementById('total500').value;
+        let numero11 = document.getElementById('total200').value;
+        let numero12 = document.getElementById('total100').value;
+        let numero13 = document.getElementById('total50').value;
+        let numero14 = document.getElementById('total20').value;
+        let numero15 = document.getElementById('total10').value;
+
+        let numero16 = document.getElementById('totalegresos').value;
+
+        let numero17 = document.getElementById('transferencias').value;
+        let numero18 = document.getElementById('pedidosya').value;
+
+        let numero19 = document.getElementById('totalefectivosistema').value;
+        let numero20 = document.getElementById('totalposnetsistema').value;
+        //let numero21 = document.getElementById('sobranteposnet').value;
+        //let numero22 = document.getElementById('faltanteposnet').value;
+
+        // Suma de posnets
+        let suma1 = 
+            (parseInt(numero1) || 0) +
+            (parseInt(numero2) || 0) +
+            (parseInt(numero3) || 0) +
+            (parseInt(numero4) || 0) +
+            (parseInt(numero5) || 0);
+
+        // Mostrar el resultado en el campo de texto
+        document.getElementById('totalposnet').value = suma1;
+        document.getElementById('entregaposnet').value = suma1;
+
+        // Suma de efectivo
+        let suma2 = 
+            (parseInt(numero6) || 0) +
+            (parseInt(numero7) || 0) +
+            (parseInt(numero8) || 0) +
+            (parseInt(numero9) || 0) +
+            (parseInt(numero10) || 0) +
+            (parseInt(numero11) || 0) +
+            (parseInt(numero12) || 0) +
+            (parseInt(numero13) || 0) +
+            (parseInt(numero14) || 0) +
+            (parseInt(numero15) || 0);
+
+        // Mostrar el resultado en el campo de texto
+        document.getElementById('totalefectivo').value = suma2;
+        
+        // Total egresos + Total efectivo
+        let suma3 =
+            (parseInt(numero16) || 0) + suma2;
+
+        document.getElementById('entregaefectivo').value = suma2;
+
+        // Transferencias + PedidosYA + Total posnet + (Total egresos + Total efectivo)
+        let suma4 =
+            (parseInt(numero17) || 0) + (parseInt(numero18) || 0) + suma1 + suma3;
+
+        document.getElementById('totalcierre').value = suma4;
+
+        let resta1 = suma3 - (parseInt(numero19) || 0);//diferencia efectivo
+        let resta2 = suma1 - (parseInt(numero20) || 0);//dif posnet
+
+        if (resta1 >= 0) {
+            document.getElementById('sobranteefectivo').value = resta1;
+            document.getElementById('faltanteefectivo').value = 0;
+        } else {
+            document.getElementById('sobranteefectivo').value = 0;
+            document.getElementById('faltanteefectivo').value = resta1 * (-1);
+        }
+
+        if (resta2 > 0) {
+            document.getElementById('sobranteposnet').value = resta2;
+            document.getElementById('faltanteposnet').value = 0;
+        } else {
+            document.getElementById('sobranteposnet').value = 0;
+            document.getElementById('faltanteposnet').value = resta2 * (-1);
+        }
+    }
+
+    // Función para actualizar los totales
+    function actualizarTotal(idCantidad, idTotal, valorBillete) {
+        const cantidad = document.getElementById(idCantidad).value || 0; // Si no hay valor, usar 0
+        const total = cantidad * valorBillete;
+        document.getElementById(idTotal).value = total;
+        //calcularTotalEfectivo(); // Actualizar el total de efectivo
+    }
+
+</script>
+
+<div class="container">
+
+    <form action="/formulario" method="post" 
+      class="container py-4 needs-validation" 
+      style="max-width: 650px; background: #f8f9fa; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);"
+      novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <!-- Fecha -->
+        <div class="mb-4">
+            <label for="startDate" class="form-label fw-bold">Fecha</label>
+            <input id="startDate" name="startDate" class="form-control" type="date" required />
+            <div class="invalid-feedback">Por favor, ingresa una fecha válida.</div>
+        </div>
+
+        <!-- Selección de Local -->
+        <div class="mb-4">
+            <label class="form-label fw-bold">Local</label>
+            <select class="form-select" name="nombrelocal" required>
+                <option value="" selected>Selecciona el Local</option>
+                {% for local in locales %}
+                    <option value="{{ local.nombre }}">{{ local.nombre }}</option>
+                {% endfor %}
+            </select>
+            <div class="invalid-feedback">Por favor, selecciona un local.</div>
+        </div>
+
+        <!-- Selección de encargada -->
+        <div class="mb-4">
+            <label class="form-label fw-bold">Nombre Encargada</label>
+            <select class="form-select" name="nombreencargada" required>
+                <option value="" selected>Selecciona encargada</option>
+                {% for encargada in encargadas %}
+                    <option value="{{ encargada.id }}">{{ encargada.nombre }} {{ encargada.apellido }}</option>
+                {% endfor %}
+            </select>
+            <div class="invalid-feedback">Por favor, selecciona una encargada.</div>
+        </div>
+
+        <!-- Selección de turno -->
+        <div class="mb-4">
+            <label class="form-label fw-bold">Turno</label>
+            <select class="form-select" name="turno" required>
+                <option value="" selected>Selecciona turno</option>
+                <option value="Turno mañana">Turno mañana</option>
+                <option value="Turno noche">Turno noche</option>
+            </select>
+            <div class="invalid-feedback">Por favor, selecciona un turno.</div>
+        </div>
+
+   
+        <!-- Tabla formas de pago -->
+        <div class="mb-4">
+            <h5 class="fw-bold text-primary">Formas de Pago</h5>
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Pago</th>
+                        <th>Nombre</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Visa</th>
+                        <td><input type="text" class="form-control" id="nombrevisa1" name="nombrevisa1"></td>
+                        <td><input type="number" class="form-control" id="importevisa1" name="importevisa1" onkeyup="sumar();"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Visa</th>
+                        <td><input type="text" class="form-control" id="nombrevisa2" name="nombrevisa2"></td>
+                        <td><input type="number" class="form-control" id="importevisa2" name="importevisa2" onkeyup="sumar();"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Visa</th>
+                        <td><input type="text" class="form-control" id="nombrevisa3" name="nombrevisa3"></td>
+                        <td><input type="number" class="form-control" id="importevisa3" name="importevisa3" onkeyup="sumar();"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Visa</th>
+                        <td><input type="text" class="form-control" id="nombrevisa4" name="nombrevisa4"></td>
+                        <td><input type="number" class="form-control" id="importevisa4" name="importevisa4" onkeyup="sumar();"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">QR</th>
+                        <td><input type="text" class="form-control" id="nombreqr" name="nombreqr"></td>
+                        <td><input type="number" class="form-control" id="importeqr" name="importeqr" onkeyup="sumar();"></td>
+                    </tr>
+                    <tr class="table-light">
+                        <th scope="row" colspan="2">Total</th>
+                        <td><input type="text" class="form-control" id="totalposnet" name="totalposnet" readonly></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mb-4">
+            <h5 class="fw-bold text-primary">Otros Pagos</h5>
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Pago</th>
+                        <th>Aclaración</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Transferencias</th>
+                        <td><input type="text" class="form-control" id="transferenciastext" name="transferenciastext"></td>
+                        <td><input type="number" class="form-control" id="transferencias" name="transferencias" onkeyup="sumar();"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Pedidos Ya</th>
+                        <td><input type="text" class="form-control" id="pedidosyatext" name="pedidosyatext"></td>
+                        <td><input type="number" class="form-control" id="pedidosya" name="pedidosya" onkeyup="sumar();"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Planilla entrega dinero -->
+        <div class="mb-4">
+        <h5 class="fw-bold text-primary">Planilla Entrega Dinero</h5>
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Billete</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">$20000</th>
+                        <td><input type="number" class="form-control" id="cantidad20m" name="cantidad20m" oninput="actualizarTotal('cantidad20m', 'total20m', 20000)" onkeyup="sumar()"></td>
+                        <td><input type="number" class="form-control" id="total20m" name="total20m" readonly></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$10000</th>
+                        <td><input type="number" class="form-control" id="cantidad10m" name="cantidad10m" oninput="actualizarTotal('cantidad10m', 'total10m', 10000)" onkeyup="sumar()"></td>
+                        <td><input type="number" class="form-control" id="total10m" name="total10m" readonly></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$2000</th>
+                        <td><input type="number" class="form-control" id="cantidad2m" name="cantidad2m" oninput="actualizarTotal('cantidad2m', 'total2m', 2000)" onkeyup="sumar()"></td>
+                        <td><input type="number" class="form-control" id="total2m" name="total2m" readonly></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$1000</th>
+                        <td><input type="number" class="form-control" id="cantidad1m" name="cantidad1m" oninput="actualizarTotal('cantidad1m', 'total1m', 1000)" onkeyup="sumar()"></td>
+                        <td><input type="number" class="form-control" id="total1m" name="total1m" readonly></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$500</th>
+                        <td><input type="number" class="form-control" id="cantidad500" name="cantidad500" oninput="actualizarTotal('cantidad500', 'total500', 500)" onkeyup="sumar()"></td>
+                        <td><input type="number" class="form-control" id="total500" name="total500" readonly></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$200</th>
+                        <td><input type="number" class="form-control" id="cantidad200" name="cantidad200" oninput="actualizarTotal('cantidad200', 'total200', 200)" onkeyup="sumar()"></td>
+                        <td><input type="number" class="form-control" id="total200" name="total200" readonly></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$100</th>
+                        <td><input type="number" class="form-control" id="cantidad100" name="cantidad100" oninput="actualizarTotal('cantidad100', 'total100', 100)" onkeyup="sumar()"></td>
+                        <td><input type="number" class="form-control" id="total100" name="total100" readonly></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$50</th>
+                        <td><input type="number" class="form-control" id="cantidad50" name="cantidad50" oninput="actualizarTotal('cantidad50', 'total50', 50)" onkeyup="sumar()"></td>
+                        <td><input type="number" class="form-control" id="total50" name="total50" readonly></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$20</th>
+                        <td><input type="number" class="form-control" id="cantidad20" name="cantidad20" oninput="actualizarTotal('cantidad20', 'total20', 20)" onkeyup="sumar()"></td>
+                        <td><input type="number" class="form-control" id="total20" name="total20" readonly></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$10</th>
+                        <td><input type="number" class="form-control" id="cantidad10" name="cantidad10" oninput="actualizarTotal('cantidad10', 'total10', 10)" onkeyup="sumar()"></td>
+                        <td><input type="number" class="form-control" id="total10" name="total10" readonly></td>
+                    </tr>
+                    <tr class="table-light">
+                        <th scope="row" colspan="2">Total</th>
+                        <td><input type="number" class="form-control" id="totalefectivo" name="totalefectivo" readonly></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+                    <!-- Egresos -->
+        <h5 class="fw-bold text-primary">Egresos</h5>
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th colspan="2">Motivos</th>
+                    <th>Importe</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="2"><textarea class="form-control" id="egresos" name="egresos" rows="3" placeholder="Motivos del egreso..."></textarea></td>
+                    <td><input type="number" class="form-control" id="totalegresos" name="totalegresos" onkeyup="sumar();"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h5 class="fw-bold text-primary">Entrega de Efectivo</h5>
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Concepto</th>
+                    <th>Importe</th>
+                    <th>Concepto</th>
+                    <th>Importe</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Entrega Efectivo</th>
+                    <td><input type="number" class="form-control" id="entregaefectivo" name="entregaefectivo" readonly></td>
+                    <th scope="row">Entrega Posnet</th>
+                    <td><input type="number" class="form-control" id="entregaposnet" name="entregaposnet" readonly></td>
+                </tr>
+                <tr>
+                    <th scope="row">Total Efectivo Sistema</th>
+                    <td><input type="number" class="form-control" id="totalefectivosistema" name="totalefectivosistema" onkeyup="sumar();"></td>
+                    <th scope="row">Total Posnet Sistema</th>
+                    <td><input type="number" class="form-control" id="totalposnetsistema" name="totalposnetsistema" onkeyup="sumar();"></td>
+                </tr>
+                <tr><th></th></tr>
+                <tr>
+                    <th scope="row">Sobrante Efectivo</th>
+                    <td><input type="number" class="form-control" id="sobranteefectivo" name="sobranteefectivo" readonly></td>
+                    <th scope="row">Sobrante Posnet</th>
+                    <td><input type="number" class="form-control" id="sobranteposnet" name="sobranteposnet" readonly></td>
+                </tr>
+                <tr>
+                    <th scope="row">Faltante Efectivo</th>
+                    <td><input type="number" class="form-control" id="faltanteefectivo" name="faltanteefectivo" readonly></td>
+                    <th scope="row">Faltante Posnet</th>
+                    <td><input type="number" class="form-control" id="faltanteposnet" name="faltanteposnet" readonly></td>
+                </tr>
+                <tr><th></th></tr>
+                <tr>
+                    <th scope="row">Total Cierre</th>
+                    <td><input type="number" class="form-control" id="totalcierre" name="totalcierre" readonly></td>
+                    <th scope="row">Total Sistema</th>
+                    <td><input type="number" class="form-control" id="totalsistema" name="totalsistema" required>
+                        <div class="invalid-feedback">Por favor, ingrese el total del sistema.</div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Total Descuentos Cierre</th>
+                    <td><input type="number" class="form-control" id="totaldescuentoscierre" name="totaldescuentoscierre"></td>
+                    <th scope="row">Total Descuentos Sistema</th>
+                    <td><input type="number" class="form-control" id="totaldescuentossistema" name="totaldescuentossistema"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Observaciones -->
+        <div class="mb-4">
+            <label for="observaciones" class="form-label fw-bold">Observaciones</label>
+            <textarea class="form-control" id="observaciones" name="observaciones" rows="3" placeholder="Escribe aquí..."></textarea>
+        </div>
+
+        <!-- Botón de envío -->
+
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-dark" type="submit">Enviar</button>
+        </div>
+    </form>
+
+</div>
+
+<!-- Script de validación -->
+<script>
+    (function () {
+        'use strict';
+        const form = document.querySelector('.needs-validation');
+        
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    })();
+</script>
+
+{% endblock %}

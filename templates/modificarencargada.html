@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ type }}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h4 class="text-center mb-4">Modificar Empleado</h4>
+    <form action="/modificarencargada" method="get" class="mx-auto p-4 bg-light rounded shadow" style="max-width: 400px;">
+        <div class="mb-3">
+            <label for="idencargada" class="form-label">Selecciona Empleado</label>
+            <select id="idencargada" name="idencargada" class="form-select">
+                <option selected disabled>Selecciona Empleado</option>
+                {% for encargada in encargadas %}
+                <option value="{{ encargada.id }}">{{ encargada.nombre }} {{ encargada.apellido }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-dark">Seleccionar</button>
+        </div>
+    </form>
+
+    {% if encargadaseleccionada %}
+    <form action="/modificarencargada" method="post" class="mx-auto mt-4 p-4 bg-light rounded shadow" style="max-width: 400px;">
+        <div class="mb-3">
+            <label for="modificar-nombre" class="form-label">Nombre</label>
+            <input
+                type="text"
+                id="modificar-nombre"
+                name="nombre"
+                class="form-control"
+                placeholder="{{ encargadaseleccionada[0].nombre }}"
+                autocomplete="off"
+                autofocus
+            />
+        </div>
+        <div class="mb-3">
+            <label for="modificar-apellido" class="form-label">Apellido</label>
+            <input
+                type="text"
+                id="modificar-apellido"
+                name="apellido"
+                class="form-control"
+                placeholder="{{ encargadaseleccionada[0].apellido }}"
+                autocomplete="off"
+            />
+        </div>
+
+
+
+
+        <div class="mb-3">
+            <label for="modificar-puesto" class="form-label">Puesto</label>
+            <input
+                type="text"
+                id="modificar-puesto"
+                name="puesto"
+                class="form-control"
+                placeholder="{{ nada aun }}"
+                autocomplete="off"
+            />
+        </div>
+
+
+
+
+
+        <div class="mb-3">
+            <label for="modificar-local" class="form-label">Local</label>
+            <select id="modificar-local" name="local" class="form-select">
+                <option selected>{{ encargadaseleccionada[0].local }}</option>
+                {% for local in locales %}
+                <option value="{{ local.nombre }}">{{ local.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <input type="hidden" name="encid" value="{{ encargadaseleccionada[0].id }}" />
+        <div class="d-grid">
+            <button type="submit" class="btn btn-dark">Actualizar</button>
+        </div>
+    </form>
+
+    <form action="/eliminarencargada" method="post" class="mx-auto mt-3 mb-3" style="max-width: 400px;">
+        <input type="hidden" name="encid" value="{{ encargadaseleccionada[0].id }}" />
+        <div class="d-grid">
+            <button type="submit" class="btn btn-danger" onclick="if(confirm('¿Estás seguro de eliminar esta encargada?')) { document.querySelector('#deleteForm').submit(); }">Eliminar</button>
+        </div>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

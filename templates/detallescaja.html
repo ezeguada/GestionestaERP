@@ -1,0 +1,261 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ type }}
+{% endblock %}
+
+{% block body %}
+<div class="card text-dark bg-light rounded-3 bg-gradient my-3 mx-auto shadow-lg w-25">
+
+    <div class="container mt-auto mb-2">
+        <!-- Fecha -->
+        <div class="mb-4">
+            <div class="mb-4">
+                <h5 class="fw-bold text-primary">Cierre de caja</h5>
+                <table class="table table-bordered align-middle">
+                        <tr>
+                            <td><label class="form-label fw-bold">Fecha:</label></td>
+                            <td><label class="fw-bold">{{ caja[0].fecha }}</label></td>
+                        </tr>
+                        <tr>
+                            <td><label class="form-label fw-bold">Local:</label></td>
+                            <td><label class="fw-bold">{{ caja[0].local }}</label></td>
+                        </tr>
+                        <tr>
+                            <td><label class="form-label fw-bold">Nombre de la encargada:</label></td>
+                            <td><label class="fw-bold">{{ caja[0].nombre_encargada }}</label></td>
+                        </tr>
+                        <tr>
+                            <td><label class="form-label fw-bold">Turno:</label></td>
+                            <td><label class="fw-bold">{{ caja[0].turno }}</label></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>        
+        </div>
+
+        <!-- Tabla formas de pago -->
+        <div class="mb-4">
+            <h5 class="fw-bold text-primary">Formas de Pago</h5>
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Pago</th>
+                        <th>Nombre</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Visa</th>
+                        <td><label class="">{{ caja[0].nombrevisa1 }}</label></td>
+                        <td><label class="">{{ caja[0].importevisa1 }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Visa</th>
+                        <td><label class="">{{ caja[0].nombrevisa2 }}</label></td>
+                        <td><label class="">{{ caja[0].importevisa2 }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Visa</th>
+                        <td><label class="">{{ caja[0].nombrevisa3 }}</label></td>
+                        <td><label class="">{{ caja[0].importevisa3 }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Visa</th>
+                        <td><label class="">{{ caja[0].nombrevisa4 }}</label></td>
+                        <td><label class="">{{ caja[0].importevisa4 }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">QR</th>
+                        <td><label class="">{{ caja[0].nombreqr }}</label></td>
+                        <td><label class="">{{ caja[0].importeqr }}</label></td>
+                    </tr>
+                    <tr class="table-light">
+                    <th scope="row" colspan="2">Total</th>
+                        <td><label class="">{{ caja[0].totalposnet }}</label></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mb-4">
+            <h5 class="fw-bold text-primary">Otros Pagos</h5>
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Pago</th>
+                        <th>Aclaración</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Transferencias</th>
+                        <td><label class="">{{ caja[0].transferencias_text }}</label></td>
+                        <td><label class="">{{ caja[0].transferencias }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Pedidos Ya</th>
+                        <td><label class="">{{ caja[0].pedidosya_text }}</label></td>
+                        <td><label class="">{{ caja[0].pedidosya }}</label></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+                        <!-- Planilla entrega dinero -->
+        <div class="mb-4">
+            <h5 class="fw-bold text-primary">Planilla Entrega Dinero</h5>
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Billete</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">$20000</th>
+                        <td><label class="">{{ caja[0].cantidad20m }}</label></td>
+                        <td><label class="">{{ caja[0].total20m }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$10000</th>
+                        <td><label class="">{{ caja[0].cantidad10m }}</label></td>
+                        <td><label class="">{{ caja[0].total10m }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$2000</th>
+                        <td><label class="">{{ caja[0].cantidad2m }}</label></td>
+                        <td><label class="">{{ caja[0].total2m }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$1000</th>
+                        <td><label class="">{{ caja[0].cantidad1m }}</label></td>
+                        <td><label class="">{{ caja[0].total1m }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$500</th>
+                        <td><label class="">{{ caja[0].cantidad500 }}</label></td>
+                        <td><label class="">{{ caja[0].total500 }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$200</th>
+                        <td><label class="">{{ caja[0].cantidad200 }}</label></td>
+                        <td><label class="">{{ caja[0].total200 }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$100</th>
+                        <td><label class="">{{ caja[0].cantidad100 }}</label></td>
+                        <td><label class="">{{ caja[0].total100 }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$50</th>
+                        <td><label class="">{{ caja[0].cantidad50 }}</label></td>
+                        <td><label class="">{{ caja[0].total50 }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$20</th>
+                        <td><label class="">{{ caja[0].cantidad20 }}</label></td>
+                        <td><label class="">{{ caja[0].total20 }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">$10</th>
+                        <td><label class="">{{ caja[0].cantidad10 }}</label></td>
+                        <td><label class="">{{ caja[0].total10 }}</label></td>
+                    </tr>
+                    <tr class="table-light">
+                        <th scope="row" colspan="2">Total</th>
+                        <td><label class="">{{ caja[0].totalefectivo }}</label></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Egresos -->
+        <h5 class="fw-bold text-primary">Egresos</h5>
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th colspan="2">Motivos</th>
+                    <th>Importe</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="2"><label class="">{{ caja[0].egresos }}</label></td>
+                    <td><label class="">{{ caja[0].totalegresos }}</label></td>
+                </tr>
+            </tbody>          
+        </table>
+
+            <h5 class="fw-bold text-primary">Entrega de Efectivo</h5>
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Importe</th>
+                        <th>Concepto</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Entrega Efectivo</th>
+                        <td><label class="">{{ caja[0].entregaefectivo }}</label></td>
+                        <th scope="row">Entrega Posnet</th>
+                        <td><label class="">{{ caja[0].entregaposnet }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Total Efectivo Sistema</th>
+                        <td><label class="">{{ caja[0].totalefectivosistema }}</label></td>
+                        <th scope="row">Total Posnet Sistema</th>
+                        <td><label class="">{{ caja[0].totalposnetsistema }}</label></td>
+                    </tr>
+                    <tr><th></th></tr>
+                    <tr>
+                        <th scope="row">Sobrante Efectivo</th>
+                        <td><label class="">{{ caja[0].sobranteefectivo }}</label></td>
+                        <th scope="row">Sobrante Posnet</th>
+                        <td><label class="">{{ caja[0].sobranteposnet }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Faltante Efectivo</th>
+                        <td><label class="">{{ caja[0].faltanteefectivo }}</label></td>
+                        <th scope="row">Faltante Posnet</th>
+                        <td><label class="">{{ caja[0].faltanteposnet }}</label></td>
+                    </tr>
+                    <tr><th></th></tr>
+                    <tr>
+                        <th scope="row">Total Cierre</th>
+                        <td><label class="">{{ caja[0].totalcierre }}</label></td>
+                        <th scope="row">Total Sistema</th>
+                        <td><label class="">{{ caja[0].totalsistema }}</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Total Descuentos Cierre</th>
+                        <td><label class="">{{ caja[0].totaldescuentoscierre }}</label></td>
+                        <th scope="row">Total Descuentos Sistema</th>
+                        <td><label class="">{{ caja[0].totaldescuentossistema }}</label></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        <!-- Observaciones -->
+        <div class="mb-4">
+            <label for="observaciones" class="form-label fw-bold">Observaciones:</label>
+            <td><label id="observaciones" class="fw-bold">{{ caja[0].observaciones }}</label></td>
+        </div>
+
+        <!-- Botón de envío -->
+
+        <div class="d-grid">
+            <a href="/visualizacion" class="btn btn-dark" role="button">Volver</a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
