@@ -1,0 +1,6 @@
+# Archivos sensibles
+__pycache__/
+flask_session/
+logs/
+*.conf
+*.key

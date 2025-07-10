@@ -13,6 +13,10 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFProtect
 
+with open('datos.key', 'r', encoding='utf-8') as archivo:
+    lineas = archivo.readlines()  # Lista donde cada elemento es una línea
+
+lineas = lineas[0].split()
 
 os.environ["TERM"] = "dumb"
 
@@ -49,7 +53,7 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./statics/images"
 
 # Configure session to use filesystem (instead of signed cookies)
-app.config['SECRET_KEY'] = 'QlKo45986PplOkskd/&%?0Kkj@klsoLSOSodsosd'
+app.config['SECRET_KEY'] = lineas[1]
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config['SESSION_FILE_DIR'] = './tmp/flask_session'
