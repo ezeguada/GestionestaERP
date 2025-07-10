@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ type }}
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <!-- Carga de datos a la base de datos -->
+     
+    <h2>Compras</h2>
+
+    <div class="accordion accordion-flush border border-1 mb-2" style="background: #f8f9fa; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);" id="accordionFlushCargadiaria">
+        <div class="accordion-item">
+            <h2 class="accordion-header text-center" id="flush-headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                Nueva compra
+                </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushCargadiaria">
+                <div class="accordion-body">
+                    
+                    <form action="/compras" method="post" class="container py-4 needs-validation mb-2"  novalidate>
+
+                        <!-- FECHA	ITEM	CANTIDAD    Tipo de pago    PRECIO	LOCAL -->
+                        <div class="row">
+                            <div class="col">
+                                <label for="fechaCarga" class="form-label fw-bold">Fecha</label>
+                                <input style="min-width: 150px;" id="fechaCarga" name="fechaCarga" class="form-control" type="date" required />
+                            </div>
+                            <div class="col">
+                                <label for="item" class="form-label fw-bold">Item</label>
+                                <select style="min-width: 150px;" class="form-select" name="item" required>
+                                    <option value="" selected>Item</option>
+                                    <!-- {% for local in locales %}
+                                    <option value="{{ local.nombre }}">{{ local.nombre }}</option>
+                                    {% endfor %} -->
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="cantidad" class="form-label fw-bold">Cantidad</label>
+                                <input style="min-width: 150px;" type="number" class="form-control" id="cantidad" name="cantidad">
+                            </div>
+                            <div class="col">
+                                <label for="tipoPago" class="form-label fw-bold">Tipo de pago</label>
+                                <select style="min-width: 150px;" class="form-select" name="tipoPago" required>
+                                    <option value="" selected>Tipo de pago</option>
+                                    <!-- {% for local in locales %}
+                                    <option value="{{ local.nombre }}">{{ local.nombre }}</option>
+                                    {% endfor %} -->
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="valor" class="form-label fw-bold">Precio</label>
+                                <input style="min-width: 150px;" type="number" class="form-control" id="valor" name="valor">
+                            </div>
+                            <div class="col">
+                                <label for="local" class="form-label fw-bold">Local</label>
+                                <select style="min-width: 150px;" class="form-select" name="local" required>
+                                    <option value="" selected>Nro Local</option>
+                                    <!-- {% for local in locales %}
+                                    <option value="{{ local.nombre }}">{{ local.nombre }}</option>
+                                    {% endfor %} -->
+                                </select>
+                            </div>
+                            
+                            
+                        </div>
+
+
+                        <div class="d-flex justify-content-center mt-3">
+                            <button class="btn btn-dark" type="submit">Cargar compra</button>
+                        </div>
+
+                    </form>
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+
+     <!-- Títulos de la tabla de carga diaria -->
+    <table class="table table-striped table-hover table-sm">
+        <thead>
+            <tr>
+                <!-- FECHA	ITEM	CANTIDAD    Tipo de pago    PRECIO	LOCAL -->
+                <th scope="col">Fecha</th>
+                <th scope="col">Item</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Tipo de pago</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Local</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Parte de la tabla que hay que ITERAR con la base de datos del día de la fecha de compras --> 
+            
+            <tr>
+                <td scope="row">4/7/2025 11:40</td>
+                <td>Cobro</td>
+                <td>$5000</td>
+                <td>Tipo de laburo</td>
+                <td>1</td>
+                <td>Llave X</td>
+            </tr>
+            
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

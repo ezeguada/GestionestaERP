@@ -167,6 +167,18 @@ def stock():
     return render_template("stock.html", nombre="Control de stock")
 
 
+@app.route("/compras", methods=["GET", "POST"])
+@login_required
+def compras():
+    return render_template("compras.html", nombre="Compras")
+
+
+@app.route("/gastos", methods=["GET", "POST"])
+@login_required
+def gastos():
+    return render_template("gastos.html", nombre="Gastos")
+
+
 @app.route("/formulario", methods=["GET", "POST"])
 @login_required
 def formulario():

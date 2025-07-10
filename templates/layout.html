@@ -20,8 +20,16 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% if session["user_id"] %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/minegocio">Mi Negocio</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Mi Negocio</a>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                        <li><a class="dropdown-item" href="/cargadiaria" class="btn btn-dark mt-3">Carga Diaria</a></li>
+                        <li><a class="dropdown-item" href="/presupuestos" class="btn btn-dark mt-3">Presupuestos</a></li>
+                        <li><a class="dropdown-item" href="/listaprecios" class="btn btn-dark mt-3">Lista de precios</a></li>
+                        <li><a class="dropdown-item" href="/compras" class="btn btn-dark mt-3">Compras</a></li>
+                        <li><a class="dropdown-item" href="/gastos" class="btn btn-dark mt-3">Gastos</a></li>
+                        <li><a class="dropdown-item" href="/stock" class="btn btn-dark mt-3 mb-2">Control de stock</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/formulario">Cierre de Caja</a>

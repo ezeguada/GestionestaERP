@@ -1,11 +1,46 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    {{ type }}
+    {{ nombre }}
 {% endblock %}
 
 {% block body %}
 
+
+<!-- 
 Control de stock *** PENDING ***
+ITEM	STOCK INICIAL	INGRESOS	SALIDAS	STOCK FINAL
+-->
+
+<div class="container">
+    <!-- Títulos de la tabla de carga diaria -->
+    <table class="table table-striped table-hover table-sm">
+        <thead>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Stock inicial</th>
+                <th scope="col">Ingresos</th>
+                <th scope="col">Salidas</th>
+                <th scope="col">Stock final</th>
+                <th scope="col">Stock L1</th>
+                <th scope="col">Stock L2</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            <!-- Parte de la tabla que hay que ITERAR con la base de datos de mercadería --> 
+            <tr>
+                <td scope="row">ACY101</td>
+                <td>10</td>
+                <td>0</td>
+                <td>2</td>
+                <td>8</td>
+                <td>4</td>
+                <td>4</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}

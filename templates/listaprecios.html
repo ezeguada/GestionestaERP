@@ -1,11 +1,59 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    {{ type }}
+    {{ nombre }}
 {% endblock %}
 
 {% block body %}
 
-Lista de precios *** PENDING ***
+<!-- Lista de precios *** PENDING ***
+ITEM	 COSTO	PORCENTAJE	IVA	 EFECTIVO	 FACTURA	 TARJETA	STOCK L1	STOCK L2 -->
+
+<form action="/listaprecios" method="post" class="row g-3 needs-validation justify-content-center mb-2"  novalidate>
+    <div class="col-auto">
+        <label for="nombreproducto" class="form-label fw-bold">Buscar producto</label>
+    </div>
+    <div class="col-auto">
+        <input id="nombreproducto" name="nombreproducto" class="form-control" type="text" />
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-dark" type="submit">Buscar</button>
+    </div>
+</form>
+
+<div class="container">
+    <!-- Títulos de la tabla de carga diaria -->
+    <table class="table table-striped table-hover table-sm">
+        <thead>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Costo</th>
+                <th scope="col">Porcentaje</th>
+                <th scope="col">IVA</th>
+                <th scope="col">Efectivo</th>
+                <th scope="col">Factura</th>
+                <th scope="col">Tarjeta</th>
+                <th scope="col">Stock L1</th>
+                <th scope="col">Stock L2</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            <!-- Parte de la tabla que hay que ITERAR con la base de datos de mercadería --> 
+            <tr>
+                <td scope="row">ACY101</td>
+                <td>$ 21307</td>
+                <td>50%</td>
+                <td>21%</td>
+                <td>$ 38700</td>
+                <td>$ 42600</td>
+                <td>$ 46900</td>
+                <td>1</td>
+                <td>2</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}
