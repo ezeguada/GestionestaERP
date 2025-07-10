@@ -4,3 +4,4 @@ flask_session/
 logs/
 *.conf
 *.key
+*.db
