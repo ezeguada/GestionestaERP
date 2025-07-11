@@ -63,6 +63,15 @@
                                     {% endfor %} -->
                                 </select>
                             </div>
+                            <div class="col">
+                                <label for="local" class="form-label fw-bold">Local</label>
+                                <select style="min-width: 150px;" class="form-select" name="local" required>
+                                    <option value="" selected>Nro Local</option>
+                                    <!-- {% for local in locales %}
+                                    <option value="{{ local.nombre }}">{{ local.nombre }}</option>
+                                    {% endfor %} -->
+                                </select>
+                            </div>
                         </div>
 
 
@@ -91,6 +100,7 @@
                 <th scope="col">Tipo de trabajo</th>
                 <th scope="col">Cantidad</th>
                 <th scope="col">Mercadería utilizada</th>
+                <th scope="col">Local</th>
             </tr>
         </thead>
         <tbody>
@@ -103,72 +113,9 @@
                 <td>Tipo de laburo</td>
                 <td>1</td>
                 <td>Llave X</td>
+                <td>Local 1</td>
             </tr>
-            <tr>
-                <td scope="row">4/7/2025 11:40</td>
-                <td>Cobro</td>
-                <td>$5000</td>
-                <td>Tipo de laburo</td>
-                <td>1</td>
-                <td>Llave X</td>
-            </tr>
-            <tr>
-                <td scope="row">4/7/2025 11:40</td>
-                <td>Cobro</td>
-                <td>$5000</td>
-                <td>Tipo de laburo</td>
-                <td>1</td>
-                <td>Llave X</td>
-            </tr>
-            <tr>
-                <td scope="row">4/7/2025 11:40</td>
-                <td>Cobro</td>
-                <td>$5000</td>
-                <td>Tipo de laburo</td>
-                <td>1</td>
-                <td>Llave X</td>
-            </tr>
-            <tr>
-                <td scope="row">4/7/2025 11:40</td>
-                <td>Cobro</td>
-                <td>$5000</td>
-                <td>Tipo de laburo</td>
-                <td>1</td>
-                <td>Llave X</td>
-            </tr>
-            <tr>
-                <td scope="row">4/7/2025 11:40</td>
-                <td>Cobro</td>
-                <td>$5000</td>
-                <td>Tipo de laburo</td>
-                <td>1</td>
-                <td>Llave X</td>
-            </tr>
-            <tr>
-                <td scope="row">4/7/2025 11:40</td>
-                <td>Cobro</td>
-                <td>$5000</td>
-                <td>Tipo de laburo</td>
-                <td>1</td>
-                <td>Llave X</td>
-            </tr>
-            <tr>
-                <td scope="row">4/7/2025 11:40</td>
-                <td>Cobro</td>
-                <td>$5000</td>
-                <td>Tipo de laburo</td>
-                <td>1</td>
-                <td>Llave X</td>
-            </tr>
-            <tr>
-                <td scope="row">4/7/2025 11:40</td>
-                <td>Cobro</td>
-                <td>$5000</td>
-                <td>Tipo de laburo</td>
-                <td>1</td>
-                <td>Llave X</td>
-            </tr>
-
+            
         </tbody>
     </table>
 </div>
