@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ nombre }}
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h2>Cargar nueva unidad de negocios</h2>
+    <div class="container border border-1 mb-2" style="background: #f8f9fa; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);">
+        <form action="/crearlocal" method="post" class="container py-4 needs-validation mb-2"  novalidate>
+            <div class="row">
+                <div class="col">
+                    <label for="tiponegocio" class="form-label">Tipo de negocio</label>
+                    <select style="min-width: 150px;" id="tiponegocio" name="tiponegocio" class="form-select">
+                        <option selected disabled>Selecciona el Tipo de negocio</option>
+                        <!-- {% for negocio in tiponegocio %}
+                        <option value="{{ negocio.tipo }}">{{ negocio.tipo }}</option>
+                        {% endfor %} -->
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="nombre" class="form-label">Nombre negocio</label>
+                    <input style="min-width: 150px;" type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" autocomplete="off" />
+                </div>
+                <div class="col">
+                    <label for="direccion" class="form-label">Dirección</label>
+                    <input style="min-width: 150px;" type="text" id="direccion" name="direccion" class="form-control" placeholder="direccion" autocomplete="off" />
+                </div>
+                <div class="col">
+                    <label for="nombreclave" class="form-label">Nombre clave</label>
+                    <input style="min-width: 150px;" type="text" id="nombreclave" name="nombreclave" class="form-control" placeholder="nombreclave" autocomplete="off" />
+                </div>
+                
+                <div class="d-flex justify-content-center mt-3">
+                    <button type="submit" class="btn btn-dark">Guardar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <table class="table table-striped table-hover table-sm">
+        <thead>
+            <tr>
+                <th scope="col">Tipo de negocio</th>
+                <th scope="col">Nombre del negocio</th>
+                <th scope="col">Dirección</th>
+                <th scope="col">Nombre clave</th>
+                <th scope="col">Modificar</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            <!-- Parte de la tabla que hay que ITERAR con la base de datos de mercadería --> 
+            <tr>
+                <td scope="row">Local</td>
+                <td>Local 1</td>
+                <td>La concha de tu hermana 22</td>
+                <td>Local 1</td>
+                <td>
+                    <form method="GET" action="/modificarnegocio">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <!-- <input type="hidden" name="idlocal" value="{{ [0].id }}"> -->
+                        <input type="hidden" name="idlocal" value="1">
+                        <button type="submit" class="btn btn-dark btn-sm">Modificar</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

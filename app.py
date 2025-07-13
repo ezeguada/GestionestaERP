@@ -183,6 +183,30 @@ def gastos():
     return render_template("gastos.html", nombre="Gastos")
 
 
+@app.route("/cargamercaderia", methods=["GET", "POST"])
+@login_required
+def cargamercaderia():
+    return render_template("cargamercaderia.html", nombre="Cargar mercadería")
+
+
+@app.route("/crearlocal", methods=["GET", "POST"])
+@login_required
+def crearlocal():
+    return render_template("crearlocal.html", nombre="Unidades de negocio")
+
+
+@app.route("/modificarnegocio", methods=["GET", "POST"])
+@login_required
+def modificarnegocio():
+    return render_template("modificarnegocio.html", nombre="Modificar unidad de negocio")
+
+
+@app.route("/modificarmercaderia", methods=["GET", "POST"])
+@login_required
+def modificarmercaderia():
+    return render_template("modificarmercaderia.html", nombre="Modificar mercadería")
+
+
 @app.route("/formulario", methods=["GET", "POST"])
 @login_required
 def formulario():

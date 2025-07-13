@@ -34,15 +34,24 @@
                         <li><a class="dropdown-item" href="/stock" class="btn btn-dark mt-3 mb-2">Control de stock</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/formulario">Cierre de Caja</a>
-                </li>
                 {% if session["user_level"] == 794652315648 or session["user_level"] == 794652315647 %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Carga de datos
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark">                      
+                            <li><a class="dropdown-item" href="/cargamercaderia">Cargar mercadería</a></li>
+                            <li><a class="dropdown-item" href="/crearlocal">Unidades de negocio</a></li>
+                            <li><a class="dropdown-item" href="/crearlocal">Unidades de negocio</a></li>
+                        
+                    </ul>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Administrar cajas
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-dark">                      
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="/formulario">Cierre de Caja</a></li>
                             <li><a class="dropdown-item" href="/visualizacion">Ver cierres de caja</a></li>
                             <li><a class="dropdown-item" href="/bonosdecaja">Bonos de caja</a></li>
                         
@@ -73,6 +82,7 @@
             </div>
         </nav>
         <div class="container mt-5 pt-4"></div>
-        {% block body %}{% endblock %}
+        {% block body %}
+        {% endblock %}
     </body>
 </html>

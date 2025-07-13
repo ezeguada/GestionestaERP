@@ -1,0 +1,8 @@
+agregar:
+carga tipo de cobro
+carga tipo de trabajo
+carga tipo de gasto
+
+modificar tipo de cobro
+modificar tipo de trabajo
+modificar tipo de gasto
