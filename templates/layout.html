@@ -2,8 +2,8 @@
 <html lang="es-ES">
     <head>
         <!-- http://getbootstrap.com/docs/5.1/ -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         
         <meta name="viewport" content="initial-scale=1, width=device-width">
 
@@ -13,72 +13,72 @@
     <body class="bg-light bg-gradient">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
             <div class="container-fluid">
-            <a class="navbar-brand" href="/">Gestionesta</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                {% if session["user_id"] %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/minegocio">Inicio</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Mi Negocio</a>
-                    <ul class="dropdown-menu dropdown-menu-dark">
-                        <li><a class="dropdown-item" href="/cargadiaria" class="btn btn-dark mt-3">Carga Diaria</a></li>
-                        <li><a class="dropdown-item" href="/presupuestos" class="btn btn-dark mt-3">Presupuestos</a></li>
-                        <li><a class="dropdown-item" href="/listaprecios" class="btn btn-dark mt-3">Lista de precios</a></li>
-                        <li><a class="dropdown-item" href="/compras" class="btn btn-dark mt-3">Compras</a></li>
-                        <li><a class="dropdown-item" href="/gastos" class="btn btn-dark mt-3">Gastos</a></li>
-                        <li><a class="dropdown-item" href="/stock" class="btn btn-dark mt-3 mb-2">Control de stock</a></li>
+                <a class="navbar-brand" href="/">Gestionesta</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% if session["user_id"] %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/minegocio">Inicio</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Mi Negocio</a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="/cargadiaria" class="btn btn-dark mt-3">Carga Diaria</a></li>
+                            <li><a class="dropdown-item" href="/presupuestos" class="btn btn-dark mt-3">Presupuestos</a></li>
+                            <li><a class="dropdown-item" href="/listaprecios" class="btn btn-dark mt-3">Lista de precios</a></li>
+                            <li><a class="dropdown-item" href="/compras" class="btn btn-dark mt-3">Compras</a></li>
+                            <li><a class="dropdown-item" href="/gastos" class="btn btn-dark mt-3">Gastos</a></li>
+                            <li><a class="dropdown-item" href="/stock" class="btn btn-dark mt-3 mb-2">Control de stock</a></li>
+                        </ul>
+                    </li>
+                    {% if session["user_level"] == 794652315648 or session["user_level"] == 794652315647 %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Administrar
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">                      
+                                <li><a class="dropdown-item" href="/cargamercaderia">Mercadería</a></li>
+                                <li><a class="dropdown-item" href="/cargarnegocio">Unidades de negocio</a></li>
+                                <li><a class="dropdown-item" href="/cargarcobro">Métodos de cobro</a></li>
+                                <li><a class="dropdown-item" href="/cargartrabajo">Tipos de trabajo</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Administrar cajas
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="/formulario">Cierre de Caja</a></li>
+                                <li><a class="dropdown-item" href="/visualizacion">Ver cierres de caja</a></li>
+                                <li><a class="dropdown-item" href="/bonosdecaja">Bonos de caja</a></li>
+                            
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Administrar personal
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">                      
+                                <li><a class="dropdown-item" href="/cargarencargada">Agregar Nueva Encargada</a></li>
+                                <li><a class="dropdown-item" href="/modificarencargada">Modificar o borrar Encargada</a></li>
+                                <li><a class="dropdown-item" href="/register">Registrar usuario</a></li>
+                            
+                        </ul>
+                    </li>
+                    {% endif %}
                     </ul>
-                </li>
-                {% if session["user_level"] == 794652315648 or session["user_level"] == 794652315647 %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Carga de datos
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark">                      
-                            <li><a class="dropdown-item" href="/cargamercaderia">Cargar mercadería</a></li>
-                            <li><a class="dropdown-item" href="/crearlocal">Unidades de negocio</a></li>
-                            <li><a class="dropdown-item" href="/crearlocal">Unidades de negocio</a></li>
-                        
+                    <li class="nav-item "><a href="/logout" class="link-secondary">Logout</a></li>
+                    {% else %}
                     </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Administrar cajas
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a class="dropdown-item" href="/formulario">Cierre de Caja</a></li>
-                            <li><a class="dropdown-item" href="/visualizacion">Ver cierres de caja</a></li>
-                            <li><a class="dropdown-item" href="/bonosdecaja">Bonos de caja</a></li>
-                        
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Administrar personal
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark">                      
-                            <li><a class="dropdown-item" href="/cargarencargada">Agregar Nueva Encargada</a></li>
-                            <li><a class="dropdown-item" href="/modificarencargada">Modificar o borrar Encargada</a></li>
-                            <li><a class="dropdown-item" href="/register">Registrar usuario</a></li>
-                        
-                    </ul>
-                </li>
-                {% endif %}
-                </ul>
-                <li class="nav-item "><a href="/logout" class="link-secondary">Logout</a></li>
-                {% else %}
-                </ul>
-                <div class="d-flex">
-                    <a class="nav-link link-secondary" aria-current="page" href="/login">Login</a>
-                </div>
-                {% endif %}
+                    <div class="d-flex">
+                        <a class="nav-link link-secondary" aria-current="page" href="/login">Login</a>
+                    </div>
+                    {% endif %}
 
-            </div>
+                </div>
             </div>
         </nav>
         <div class="container mt-5 pt-4"></div>

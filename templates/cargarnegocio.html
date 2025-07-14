@@ -9,7 +9,7 @@
 <div class="container">
     <h2>Cargar nueva unidad de negocios</h2>
     <div class="container border border-1 mb-2" style="background: #f8f9fa; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);">
-        <form action="/crearlocal" method="post" class="container py-4 needs-validation mb-2"  novalidate>
+        <form action="/cargarnegocio" method="post" class="container py-4 needs-validation mb-2"  novalidate>
             <div class="row">
                 <div class="col">
                     <label for="tiponegocio" class="form-label">Tipo de negocio</label>
@@ -49,6 +49,7 @@
                 <th scope="col">Dirección</th>
                 <th scope="col">Nombre clave</th>
                 <th scope="col">Modificar</th>
+                <th scope="col">Eliminar</th>
             </tr>
         </thead>
         <tbody>
@@ -66,6 +67,14 @@
                         <!-- <input type="hidden" name="idlocal" value="{{ [0].id }}"> -->
                         <input type="hidden" name="idlocal" value="1">
                         <button type="submit" class="btn btn-dark btn-sm">Modificar</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="GET" action="/eliminarnegocio">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <!-- <input type="hidden" name="idlocal" value="{{ [0].id }}"> -->
+                        <input type="hidden" name="idnegocio" value="1">
+                        <button type="submit" class="btn btn-dark btn-sm">Eliminar</button>
                     </form>
                 </td>
             </tr>

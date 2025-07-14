@@ -183,16 +183,10 @@ def gastos():
     return render_template("gastos.html", nombre="Gastos")
 
 
-@app.route("/cargamercaderia", methods=["GET", "POST"])
+@app.route("/cargarnegocio", methods=["GET", "POST"])
 @login_required
-def cargamercaderia():
-    return render_template("cargamercaderia.html", nombre="Cargar mercadería")
-
-
-@app.route("/crearlocal", methods=["GET", "POST"])
-@login_required
-def crearlocal():
-    return render_template("crearlocal.html", nombre="Unidades de negocio")
+def cargarnegocio():
+    return render_template("cargarnegocio.html", nombre="Unidades de negocio")
 
 
 @app.route("/modificarnegocio", methods=["GET", "POST"])
@@ -201,10 +195,64 @@ def modificarnegocio():
     return render_template("modificarnegocio.html", nombre="Modificar unidad de negocio")
 
 
+@app.route("/eliminarnegocio", methods=["GET", "POST"])
+@login_required
+def eliminarnegocio():
+    return render_template("cargarnegocio.html", nombre="Eliminar unidades de negocio")
+
+
+@app.route("/cargamercaderia", methods=["GET", "POST"])
+@login_required
+def cargamercaderia():
+    return render_template("cargamercaderia.html", nombre="Cargar mercadería")
+
+
 @app.route("/modificarmercaderia", methods=["GET", "POST"])
 @login_required
 def modificarmercaderia():
     return render_template("modificarmercaderia.html", nombre="Modificar mercadería")
+
+
+@app.route("/eliminarmercaderia", methods=["GET", "POST"])
+@login_required
+def eliminarcaderia():
+    return render_template("cargamercaderia.html", nombre="Mercadería eliminada")
+
+
+@app.route("/cargarcobro", methods=["GET", "POST"])
+@login_required
+def cargarcobro():
+    return render_template("cargarcobro.html", nombre="Nuevo método de cobro")
+
+
+@app.route("/modificarcobro", methods=["GET", "POST"])
+@login_required
+def modificarcobro():
+    return render_template("modificarcobro.html", nombre="Modificar método de cobro")
+
+
+@app.route("/eliminarcobro", methods=["GET", "POST"])
+@login_required
+def eliminarcobro():
+    return render_template("cargarcobro.html", nombre="Método de cobro eliminado")
+
+
+@app.route("/cargartrabajo", methods=["GET", "POST"])
+@login_required
+def cargartrabajo():
+    return render_template("cargartrabajo.html", nombre="Cargar tipo de trabajo")
+
+
+@app.route("/modificartrabajo", methods=["GET", "POST"])
+@login_required
+def modificartrabajo():
+    return render_template("modificartrabajo.html", nombre="Modificar tipo de trabajo")
+
+
+@app.route("/eliminartrabajo", methods=["GET", "POST"])
+@login_required
+def eliminartrabajo():
+    return render_template("cargartrabajo.html", nombre="Tipo de trabajo eliminado")
 
 
 @app.route("/formulario", methods=["GET", "POST"])
