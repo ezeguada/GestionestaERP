@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla Dinámica con Inputs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border: none;
+            overflow: hidden;
+        }
+        .card-header {
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            color: white;
+            font-weight: 600;
+            padding: 15px 20px;
+        }
+        .table-responsive {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table {
+            margin-bottom: 0;
+        }
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: 500;
+        }
+        .btn-add {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(46, 204, 113, 0.4);
+        }
+        .btn-remove {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        .btn-remove:hover {
+            background: linear-gradient(to right, #c0392b, #e74c3c);
+        }
+        .input-cell input {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 6px 10px;
+            width: 100%;
+            transition: border 0.3s;
+        }
+        .input-cell input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        .highlight {
+            animation: highlight 1.5s ease;
+        }
+        @keyframes highlight {
+            0% { background-color: rgba(46, 204, 113, 0.5); }
+            100% { background-color: transparent; }
+        }
+        .footer-info {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-0"><i class="fas fa-table me-2"></i>Tabla Dinámica con Inputs</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="miTabla" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio Unitario</th>
+                                        <th>Total</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Filas se agregarán aquí -->
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="4" class="text-end">Total General:</th>
+                                        <th id="totalGeneral">$0.00</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <button onclick="agregarFila()" class="btn btn-add">
+                                <i class="fas fa-plus me-2"></i>Agregar Fila
+                            </button>
+                            
+                            <div class="d-flex gap-2">
+                                <button onclick="guardarTabla()" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Guardar
+                                </button>
+                                <button onclick="resetTabla()" class="btn btn-danger">
+                                    <i class="fas fa-trash me-2"></i>Limpiar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-info">
+                    <h5><i class="fas fa-info-circle me-2"></i>Instrucciones:</h5>
+                    <ul class="mt-3">
+                        <li>Haz clic en "Agregar Fila" para añadir nuevos productos a la tabla</li>
+                        <li>Completa los datos en los campos de entrada</li>
+                        <li>La columna "Total" se calcula automáticamente (Cantidad × Precio)</li>
+                        <li>Elimina filas individualmente con el botón <i class="fas fa-times"></i></li>
+                        <li>Usa "Guardar" para almacenar los datos o "Limpiar" para borrar todo</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let rowCount = 0;
+        const productos = ["Laptop", "Teléfono", "Tablet", "Monitor", "Teclado", "Mouse", "Auriculares"];
+        
+        function agregarFila() {
+            const tabla = document.getElementById("miTabla");
+            const cuerpoTabla = tabla.getElementsByTagName("tbody")[0];
+            
+            // Crear nueva fila
+            const nuevaFila = cuerpoTabla.insertRow();
+            nuevaFila.classList.add("highlight");
+            rowCount++;
+            
+            // Celda para el número de fila
+            const celdaNumero = nuevaFila.insertCell();
+            celdaNumero.textContent = rowCount;
+            celdaNumero.className = "align-middle";
+            
+            // Celda para el nombre del producto (con select)
+            const celdaProducto = nuevaFila.insertCell();
+            celdaProducto.className = "input-cell";
+            
+            const selectProducto = document.createElement("select");
+            selectProducto.className = "form-select";
+            selectProducto.name = "producto[]";
+            
+            // Agregar opción vacía
+            const defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.textContent = "Seleccione un producto";
+            selectProducto.appendChild(defaultOption);
+            
+            // Agregar opciones de productos
+            productos.forEach(producto => {
+                const option = document.createElement("option");
+                option.value = producto;
+                option.textContent = producto;
+                selectProducto.appendChild(option);
+            });
+            
+            celdaProducto.appendChild(selectProducto);
+            
+            // Celda para la cantidad (con input number)
+            const celdaCantidad = nuevaFila.insertCell();
+            celdaCantidad.className = "input-cell";
+            
+            const inputCantidad = document.createElement("input");
+            inputCantidad.type = "number";
+            inputCantidad.name = "cantidad[]";
+            inputCantidad.min = "1";
+            inputCantidad.value = "1";
+            inputCantidad.className = "form-control";
+            inputCantidad.addEventListener("input", calcularTotales);
+            
+            celdaCantidad.appendChild(inputCantidad);
+            
+            // Celda para el precio unitario (con input number)
+            const celdaPrecio = nuevaFila.insertCell();
+            celdaPrecio.className = "input-cell";
+            
+            const inputPrecio = document.createElement("input");
+            inputPrecio.type = "number";
+            inputPrecio.name = "precio[]";
+            inputPrecio.min = "0";
+            inputPrecio.step = "0.01";
+            inputPrecio.value = "0.00";
+            inputPrecio.className = "form-control";
+            inputPrecio.addEventListener("input", calcularTotales);
+            
+            celdaPrecio.appendChild(inputPrecio);
+            
+            // Celda para el total (calculado automáticamente)
+            const celdaTotal = nuevaFila.insertCell();
+            celdaTotal.className = "align-middle";
+            celdaTotal.textContent = "$0.00";
+            celdaTotal.dataset.value = "0";
+            
+            // Celda para el botón de eliminar
+            const celdaAcciones = nuevaFila.insertCell();
+            celdaAcciones.className = "align-middle";
+            
+            const btnEliminar = document.createElement("button");
+            btnEliminar.className = "btn btn-remove";
+            btnEliminar.innerHTML = '<i class="fas fa-times"></i>';
+            btnEliminar.onclick = function() {
+                cuerpoTabla.removeChild(nuevaFila);
+                calcularTotales();
+                reordenarNumeros();
+            };
+            
+            celdaAcciones.appendChild(btnEliminar);
+            
+            // Calcular totales después de agregar fila
+            calcularTotales();
+            
+            // Remover efecto de highlight después de la animación
+            setTimeout(() => {
+                nuevaFila.classList.remove("highlight");
+            }, 1500);
+        }
+        
+        function calcularTotales() {
+            const filas = document.querySelectorAll("#miTabla tbody tr");
+            let totalGeneral = 0;
+            
+            filas.forEach((fila, index) => {
+                const cantidad = fila.querySelector("input[name='cantidad[]']")?.value || 0;
+                const precio = fila.querySelector("input[name='precio[]']")?.value || 0;
+                const total = parseFloat(cantidad) * parseFloat(precio);
+                
+                // Actualizar celda de total
+                if (fila.cells[4]) {
+                    fila.cells[4].textContent = `$${total.toFixed(2)}`;
+                    fila.cells[4].dataset.value = total;
+                }
+                
+                totalGeneral += total;
+            });
+            
+            // Actualizar total general
+            document.getElementById("totalGeneral").textContent = `$${totalGeneral.toFixed(2)}`;
+        }
+        
+        function reordenarNumeros() {
+            const filas = document.querySelectorAll("#miTabla tbody tr");
+            filas.forEach((fila, index) => {
+                fila.cells[0].textContent = index + 1;
+            });
+            rowCount = filas.length;
+        }
+        
+        function guardarTabla() {
+            const filas = document.querySelectorAll("#miTabla tbody tr");
+            if (filas.length === 0) {
+                alert("No hay datos para guardar");
+                return;
+            }
+            
+            const datos = [];
+            filas.forEach(fila => {
+                const producto = fila.querySelector("select[name='producto[]']")?.value || "";
+                const cantidad = fila.querySelector("input[name='cantidad[]']")?.value || 0;
+                const precio = fila.querySelector("input[name='precio[]']")?.value || 0;
+                const total = fila.cells[4].dataset.value || 0;
+                
+                datos.push({
+                    producto,
+                    cantidad,
+                    precio,
+                    total
+                });
+            });
+            
+            // En un caso real, aquí enviarías los datos al servidor
+            alert(`Datos guardados exitosamente!\nTotal de filas: ${datos}\nTotal general: $${document.getElementById("totalGeneral").textContent.slice(1)}`);
+        }
+        
+        function resetTabla() {
+            if (confirm("¿Estás seguro de que deseas eliminar todas las filas?")) {
+                const cuerpoTabla = document.querySelector("#miTabla tbody");
+                cuerpoTabla.innerHTML = "";
+                document.getElementById("totalGeneral").textContent = "$0.00";
+                rowCount = 0;
+            }
+        }
+        
+        // Agregar fila inicial al cargar
+        window.onload = function() {
+            agregarFila();
+        };
+    </script>
+</body>
+</html>

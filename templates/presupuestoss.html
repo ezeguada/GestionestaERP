@@ -1,0 +1,176 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ nombre }}
+{% endblock %}
+
+{% block body %}
+
+<!-- Script para agregar filas dinámicas -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tablaBody = document.getElementById('tabla-body');
+    
+    // Delegación de eventos para los botones
+    tablaBody.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-agregar')) {
+            const fila = e.target.closest('tr');
+            
+            if (fila.classList.contains('fila-producto')) {
+                agregarFila('fila-producto', '.encabezado-mano-obra');
+            } 
+            else if (fila.classList.contains('fila-mano-obra')) {
+                agregarFila('fila-mano-obra', 'thead:last-of-type');
+            }
+        }
+    });
+
+    function agregarFila(tipoFila, insertarAntesDe) {
+        // Clonar la fila
+        const filasExistentes = document.querySelectorAll(`.${tipoFila}`);
+        const nuevaFila = filasExistentes[0].cloneNode(true);
+        
+        // Limpiar inputs
+        const inputs = nuevaFila.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            if (input.type !== 'button') {
+                input.value = '';
+            }
+            if (input.tagName === 'SELECT') {
+                input.selectedIndex = 0; // Resetear selección
+            }
+        });
+        
+        // Insertar en la posición correcta
+        const referencia = document.querySelector(insertarAntesDe);
+        tablaBody.insertBefore(nuevaFila, referencia);
+    }
+});
+</script>
+
+
+
+
+<div class="container">
+    <h2>Nuevo presupuesto</h2>
+    <form action="/presupuestos" method="post" class="container py-4 needs-validation mb-2" style="background: #f8f9fa; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);" novalidate>
+
+        <div class="table-responsive-lg">
+            <table class="table table-hover table-sm table-light" style="min-width: 800px;">
+                <thead>
+                    <tr>
+                        <th scope="col">Cant.</th>
+                        <th scope="col">Código</th>
+                        <th scope="col">Valor unitario</th>
+                        <th scope="col">Efectivo</th>
+                        <th scope="col">Factura</th>
+                        <th scope="col">Tarjeta</th>
+                        <th scope="col">Local</th>
+                        <th scope="col">#</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-body">
+                    <!-- Fila de productos (se clonará) -->
+                    <tr class="fila-producto">
+                        <td scope="row">
+                            <input type="number" class="form-control cantidad" style="max-width: 50px;" name="cantidad[]">
+                        </td>
+                        <td>
+                            <select class="form-select" name="codigo[]" required>
+                                <option value="" selected>Código</option>
+                                <!-- {% for local in locales %}
+                                <option value="{{ local.nombre }}">{{ local.nombre }}</option>
+                                {% endfor %} -->
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control precio" name="precio[]" readonly disabled>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control efectivo" name="efectivo[]" readonly disabled>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control factura" name="factura[]" readonly disabled>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control tarjeta" name="tarjeta[]" readonly disabled>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control local" name="local[]" style="max-width: 50px;" readonly disabled>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-dark btn-agregar">+</button>
+                        </td>
+                    </tr>
+                
+                <thead class="encabezado-mano-obra">
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">
+                            <div class="text-wrap">
+                                    <span class="d-none d-md-inline">Mano de obra exenta</span>
+                                    <span class="d-inline d-md-none">MO Ex.</span>
+                            </div>  
+                        </th>
+                        <th scope="col">M Obra</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                    <!-- Fila de mano de obra (se clonará) -->
+                    <tr class="fila-mano-obra">
+                        <td scope="row">
+                            <input type="number" class="form-control cantidad" style="max-width: 50px;" name="cantidad_mo[]">
+                        </td>
+                        <td>
+                            <input type="Text" class="form-control" name="mobra[]">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control precio" name="precio_mo[]">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control efectivo" name="efectivo_mo[]" readonly disabled>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control factura" name="factura_mo[]" readonly disabled>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control tarjeta" name="tarjeta_mo[]" readonly disabled>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control local" name="local_mo[]" style="max-width: 50px;" readonly disabled>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-dark btn-agregar">+</button>
+                        </td>
+                    </tr>
+                    
+                <thead>
+                    <tr>
+                        <th scope="col" colspan="3" class="text-center">TOTAL</th>
+                        <th scope="col">
+                            <input type="number" class="form-control" name="Efectivo" readonly disabled >
+                        </th>
+                        <th scope="col">
+                            <input type="number" class="form-control" name="Factura" readonly disabled>
+                        </th>
+                        <th scope="col">
+                            <input type="number" class="form-control" name="Tarjeta" readonly disabled>
+                        </th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-center mt-3">
+            <button class="btn btn-dark" type="submit">Exportar como PDF</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

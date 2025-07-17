@@ -141,6 +141,12 @@ def logout():
     return redirect("/")
 
 
+@app.route("/prueba", methods=["GET", "POST"])
+@login_required
+def prueba():
+    return render_template("prueba.html", nombre="Pruebas")
+
+
 @app.route("/minegocio", methods=["GET", "POST"])
 @login_required
 def minegocio():
@@ -156,7 +162,7 @@ def cargadiaria():
 @app.route("/presupuestos", methods=["GET", "POST"])
 @login_required
 def presupuestos():
-    return render_template("presupuestos.html", nombre="Mi Negocio")
+    return render_template("presupuestos.html", nombre="Presupuesto")
 
 
 @app.route("/listaprecios", methods=["GET", "POST"])

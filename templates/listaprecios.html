@@ -23,37 +23,39 @@ ITEM	 COSTO	PORCENTAJE	IVA	 EFECTIVO	 FACTURA	 TARJETA	STOCK L1	STOCK L2 -->
 
 <div class="container">
     <!-- Títulos de la tabla de carga diaria -->
-    <table class="table table-striped table-hover table-sm">
-        <thead>
-            <tr>
-                <th scope="col">Item</th>
-                <th scope="col">Costo</th>
-                <th scope="col">Porcentaje</th>
-                <th scope="col">IVA</th>
-                <th scope="col">Efectivo</th>
-                <th scope="col">Factura</th>
-                <th scope="col">Tarjeta</th>
-                <th scope="col">Stock L1</th>
-                <th scope="col">Stock L2</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="table-responsive-lg">
+        <table class="table table-striped table-hover table-sm" style="min-width: 800px;">
+            <thead>
+                <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Costo</th>
+                    <th scope="col">Porcentaje</th>
+                    <th scope="col">IVA</th>
+                    <th scope="col">Efectivo</th>
+                    <th scope="col">Factura</th>
+                    <th scope="col">Tarjeta</th>
+                    <th scope="col">Stock L1</th>
+                    <th scope="col">Stock L2</th>
+                </tr>
+            </thead>
+            <tbody>
 
 
-            <!-- Parte de la tabla que hay que ITERAR con la base de datos de mercadería --> 
-            <tr>
-                <td scope="row">ACY101</td>
-                <td>$ 21307</td>
-                <td>50%</td>
-                <td>21%</td>
-                <td>$ 38700</td>
-                <td>$ 42600</td>
-                <td>$ 46900</td>
-                <td>1</td>
-                <td>2</td>
-            </tr>
-        </tbody>
-    </table>
+                <!-- Parte de la tabla que hay que ITERAR con la base de datos de mercadería --> 
+                <tr>
+                    <td scope="row">ACY101</td>
+                    <td>$ 21307</td>
+                    <td>50%</td>
+                    <td>21%</td>
+                    <td>$ 38700</td>
+                    <td>$ 42600</td>
+                    <td>$ 46900</td>
+                    <td>1</td>
+                    <td>2</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {% endblock %}

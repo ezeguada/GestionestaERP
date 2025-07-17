@@ -10,106 +10,121 @@
 
     <!-- Carga de datos a la base de datos -->
      
-    <h2>Cargar Mercadería</h2>
-    
-    <div class="container border border-1 mb-2" style="background: #f8f9fa; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);">
-        <form action="/cargamercaderia" method="post" class="container py-4 needs-validation mb-2"  novalidate>
-            <div class="row">
-                <div class="col">
-                    <label for="item" class="form-label fw-bold">Item</label>
-                    <input style="min-width: 150px;" type="text" class="form-control" id="item" name="item">
-                </div>
-                <div class="col">
-                    <label for="costo" class="form-label fw-bold">Costo</label>
-                    <input style="min-width: 150px;" type="number" class="form-control" id="costo" name="costo">
-                </div>
-                <div class="col">
-                    <label for="porcentaje" class="form-label fw-bold">Porcentaje</label>
-                    <input style="min-width: 150px;" type="number" class="form-control" id="porcentaje" name="porcentaje">
-                </div>
-                <div class="col">
-                    <label for="iva" class="form-label fw-bold">IVA</label>
-                    <input style="min-width: 150px;" type="number" class="form-control" id="iva" name="iva">
-                </div>
-                <div class="col">
-                    <label for="efectivo" class="form-label fw-bold">Efectivo</label>
-                    <input type="number" class="form-control" id="efectivo" name="efectivo" readonly disabled>
-                </div>
-                <div class="col">
-                    <label for="factura" class="form-label fw-bold">Factura</label>
-                    <input type="number" class="form-control" id="factura" name="factura" readonly disabled>
-                </div>
-                <div class="col">
-                    <label for="tarjeta" class="form-label fw-bold">Tarjeta</label>
-                    <input type="number" class="form-control" id="tarjeta" name="tarjeta" readonly disabled>
-                </div>
-                <!-- {% for local in locales %}
-                <div class="col">
-                    <label for="stock{{ local.id }}" class="form-label fw-bold">Stock Local</label>
-                    <input style="min-width: 150px;" type="number" class="form-control" id="stock{{ local.id }}" name="stock{{ local.id }}">
-                </div>
-                {% endfor %} -->
-                <div class="col">
-                    <label for="stock" class="form-label fw-bold">Stock Local</label>
-                    <input style="min-width: 150px;" type="number" class="form-control" id="stock" name="stock">
-                </div>
-                
-            </div>
+    <h2>Mercadería</h2>
 
-            <div class="d-flex justify-content-center mt-3">
-                <button class="btn btn-dark" type="submit">Cargar mercadería</button>
-            </div>
+    <div class="accordion accordion-flush border border-1 mb-2" style="background: #f8f9fa; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);" id="accordionFlushCargadiaria">
+        <div class="accordion-item">
+            <h2 class="accordion-header text-center" id="flush-headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                Cargar mercadería
+                </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushCargadiaria">
+                <div class="accordion-body">
+                    <form action="/cargamercaderia" method="post" class="container py-4 needs-validation mb-2"  novalidate>
+                        <div class="row">
+                            <div class="col">
+                                <label for="item" class="form-label fw-bold">Item</label>
+                                <input style="min-width: 150px;" type="text" class="form-control" id="item" name="item">
+                            </div>
+                            <div class="col">
+                                <label for="costo" class="form-label fw-bold">Costo</label>
+                                <input style="min-width: 150px;" type="number" class="form-control" id="costo" name="costo">
+                            </div>
+                            <div class="col">
+                                <label for="porcentaje" class="form-label fw-bold">Porcentaje</label>
+                                <input style="min-width: 150px;" type="number" class="form-control" id="porcentaje" name="porcentaje">
+                            </div>
+                            <div class="col">
+                                <label for="iva" class="form-label fw-bold">IVA</label>
+                                <input style="min-width: 150px;" type="number" class="form-control" id="iva" name="iva">
+                            </div>
+                            <div class="col">
+                                <label for="efectivo" class="form-label fw-bold">Efectivo</label>
+                                <input type="number" class="form-control" id="efectivo" name="efectivo" readonly disabled>
+                            </div>
+                            <div class="col">
+                                <label for="factura" class="form-label fw-bold">Factura</label>
+                                <input type="number" class="form-control" id="factura" name="factura" readonly disabled>
+                            </div>
+                            <div class="col">
+                                <label for="tarjeta" class="form-label fw-bold">Tarjeta</label>
+                                <input type="number" class="form-control" id="tarjeta" name="tarjeta" readonly disabled>
+                            </div>
+                            <!-- {% for local in locales %}
+                            <div class="col">
+                                <label for="stock{{ local.id }}" class="form-label fw-bold">Stock Local</label>
+                                <input style="min-width: 150px;" type="number" class="form-control" id="stock{{ local.id }}" name="stock{{ local.id }}">
+                            </div>
+                            {% endfor %} -->
+                            <div class="col">
+                                <label for="stock" class="form-label fw-bold">Stock Local</label>
+                                <input style="min-width: 150px;" type="number" class="form-control" id="stock" name="stock">
+                            </div>
+                            
+                        </div>
 
-        </form>
-    
+                        <div class="d-flex justify-content-center mt-3">
+                            <button class="btn btn-dark" type="submit">Cargar mercadería</button>
+                        </div>
+
+                    </form>
+                    
+                    
+
+                </div>
+            </div>
+        </div>
     </div>
 
-    <table class="table table-striped table-hover table-sm">
-        <thead>
-            <tr>
-                <th scope="col">Item</th>
-                <th scope="col">Costo</th>
-                <th scope="col">Porcentaje</th>
-                <th scope="col">IVA</th>
-                <th scope="col">Efectivo</th>
-                <th scope="col">Factura</th>
-                <th scope="col">Tarjeta</th>
-                <th scope="col">Stock Local</th>
-                <th scope="col">Modificar</th>
-                <th scope="col">Eliminar</th>
-            </tr>
-        </thead>
-        <tbody>
+
+    <div class="table-responsive-lg">
+        <table class="table table-striped table-hover table-sm" style="min-width: 800px;">
+            <thead>
+                <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Costo</th>
+                    <th scope="col">Porcentaje</th>
+                    <th scope="col">IVA</th>
+                    <th scope="col">Efectivo</th>
+                    <th scope="col">Factura</th>
+                    <th scope="col">Tarjeta</th>
+                    <th scope="col">Stock Local</th>
+                    <th scope="col" class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
 
 
-            <!-- Parte de la tabla que hay que ITERAR con la base de datos de mercadería --> 
-            <tr>
-                <td scope="row">ACY101</td>
-                <td>$ 21307</td>
-                <td>50%</td>
-                <td>21%</td>
-                <td>$ 38700</td>
-                <td>$ 42600</td>
-                <td>$ 46900</td>
-                <td>1</td>
-                <td>
-                    <form method="GET" action="/modificarmercaderia">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <!-- <input type="hidden" name="idlocal" value="{{ [0].id }}"> -->
-                        <input type="hidden" name="idmercaderia" value="1">
-                        <button type="submit" class="btn btn-dark btn-sm">Modificar</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="GET" action="/eliminarmercaderia">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <!-- <input type="hidden" name="idlocal" value="{{ [0].id }}"> -->
-                        <input type="hidden" name="idmercaderia" value="1">
-                        <button type="submit" class="btn btn-dark btn-sm">Eliminar</button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                <!-- Parte de la tabla que hay que ITERAR con la base de datos de mercadería --> 
+                <tr>
+                    <td scope="row">ACY101</td>
+                    <td>$ 21307</td>
+                    <td>50%</td>
+                    <td>21%</td>
+                    <td>$ 38700</td>
+                    <td>$ 42600</td>
+                    <td>$ 46900</td>
+                    <td>1</td>
+                    <td class="text-end">
+                        <div class="d-flex justify-content-end gap-2">
+                            <form method="GET" action="/modificarmercaderia">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <!-- <input type="hidden" name="idlocal" value="{{ [0].id }}"> -->
+                                <input type="hidden" name="idmercaderia" value="1">
+                                <button type="submit" class="btn btn-dark btn-sm">Modificar</button>
+                            </form>
+                            <form method="GET" action="/eliminarmercaderia">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <!-- <input type="hidden" name="idlocal" value="{{ [0].id }}"> -->
+                                <input type="hidden" name="idmercaderia" value="1">
+                                <button type="submit" class="btn btn-dark btn-sm">Eliminar</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
