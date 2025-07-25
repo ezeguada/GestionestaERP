@@ -141,9 +141,17 @@ def logout():
     return redirect("/")
 
 
+# Ruta API para obtener productos
+@app.route('/products')
+def get_products():
+    productos = db.execute('SELECT * FROM productos')
+    #productos = ["michot", "gomos", "rico", "y sabroso"]
+    return jsonify(productos)
+
+
 @app.route("/prueba", methods=["GET", "POST"])
 @login_required
-def prueba():
+def prueba():    
     return render_template("prueba.html", nombre="Pruebas")
 
 

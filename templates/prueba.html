@@ -155,8 +155,31 @@
     </div>
 
     <script>
-        let rowCount = 0;
-        const productos = ["Laptop", "Teléfono", "Tablet", "Monitor", "Teclado", "Mouse", "Auriculares"];
+
+        let rowCount = 0;        
+
+        async function obtenerProductosDesdeAPI() {
+            try {
+                const response = await fetch('/products');
+                const data = await response.json();
+                return data.productos;
+            } catch (error) {
+                console.error('Error al obtener productos:', error);
+                return [];
+            }
+        }
+
+        
+        // Inicialización al cargar la página
+        window.addEventListener('DOMContentLoaded', async () => {
+            productos = await obtenerProductosDesdeAPI();
+            initTabla();
+        });
+        
+        function initTabla() {
+            document.getElementById('miTabla').style.display = 'table';
+            agregarFila();
+        }
         
         function agregarFila() {
             const tabla = document.getElementById("miTabla");
@@ -178,7 +201,7 @@
             
             const selectProducto = document.createElement("select");
             selectProducto.className = "form-select";
-            selectProducto.name = "producto[]";
+            selectProducto.name = "Producto" + rowCount;
             
             // Agregar opción vacía
             const defaultOption = document.createElement("option");
@@ -187,13 +210,31 @@
             selectProducto.appendChild(defaultOption);
             
             // Agregar opciones de productos
-            productos.forEach(producto => {
-                const option = document.createElement("option");
-                option.value = producto;
-                option.textContent = producto;
-                selectProducto.appendChild(option);
-            });
-            
+            fetch('/products')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(producto => {
+                        const option = document.createElement("option");
+                        option.value = producto.id;
+                        option.textContent = producto.nombre;
+                        option.name = producto.nombre;
+                        option.dataset.costo = producto.costo;
+                        selectProducto.appendChild(option);
+                    });
+                    // Event listener para cambio de selección
+                    selectProducto.addEventListener('change', function() {
+                        const selectedOption = this.options[this.selectedIndex];
+                        if (selectedOption.value) {
+                            // Actualizar precio con el valor del dataset
+                            inputPrecio.value = parseFloat(selectedOption.dataset.costo).toFixed(2);
+                            calcularTotales();
+                        } else {
+                            inputPrecio.value = "0.00";
+                        }
+                    });
+                });
+           
+
             celdaProducto.appendChild(selectProducto);
             
             // Celda para la cantidad (con input number)
@@ -202,7 +243,7 @@
             
             const inputCantidad = document.createElement("input");
             inputCantidad.type = "number";
-            inputCantidad.name = "cantidad[]";
+            inputCantidad.name = "cantidad"+rowCount;
             inputCantidad.min = "1";
             inputCantidad.value = "1";
             inputCantidad.className = "form-control";
@@ -216,12 +257,9 @@
             
             const inputPrecio = document.createElement("input");
             inputPrecio.type = "number";
-            inputPrecio.name = "precio[]";
-            inputPrecio.min = "0";
-            inputPrecio.step = "0.01";
             inputPrecio.value = "0.00";
             inputPrecio.className = "form-control";
-            inputPrecio.addEventListener("input", calcularTotales);
+            inputPrecio.addEventListener("onchange", calcularTotales);
             
             celdaPrecio.appendChild(inputPrecio);
             
@@ -257,20 +295,19 @@
         
         function calcularTotales() {
             const filas = document.querySelectorAll("#miTabla tbody tr");
-            let totalGeneral = 0;
+            let granTotal = 0;
             
-            filas.forEach((fila, index) => {
-                const cantidad = fila.querySelector("input[name='cantidad[]']")?.value || 0;
-                const precio = fila.querySelector("input[name='precio[]']")?.value || 0;
-                const total = parseFloat(cantidad) * parseFloat(precio);
+            filas.forEach(fila => {
+                const cantidad = fila.querySelector('input[type="number"][name^="cantidad"]');
+                const precio = fila.querySelector('input[name="precio[]"]');
+                const totalCelda = fila.querySelector('td:nth-last-child(2)');
                 
-                // Actualizar celda de total
-                if (fila.cells[4]) {
-                    fila.cells[4].textContent = `$${total.toFixed(2)}`;
-                    fila.cells[4].dataset.value = total;
+                if (cantidad && precio) {
+                    const total = parseFloat(cantidad.value) * parseFloat(precio.value || 0);
+                    totalCelda.textContent = `$${total.toFixed(2)}`;
+                    totalCelda.dataset.value = total;
+                    granTotal += total;
                 }
-                
-                totalGeneral += total;
             });
             
             // Actualizar total general
@@ -307,8 +344,25 @@
                 });
             });
             
-            // En un caso real, aquí enviarías los datos al servidor
-            alert(`Datos guardados exitosamente!\nTotal de filas: ${datos}\nTotal general: $${document.getElementById("totalGeneral").textContent.slice(1)}`);
+            // En un caso real, aquí enviarías los datos al servidor Flask
+            // Ejemplo con fetch:
+            /*
+            fetch('/guardar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ datos })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Respuesta de Flask:', data);
+                alert('Datos guardados con éxito!');
+            });
+            */
+            
+            // Para este ejemplo solo mostramos un alert
+            alert(`Datos listos para enviar a Flask:\n${JSON.stringify(datos, null, 2)}`);
         }
         
         function resetTabla() {
@@ -319,11 +373,7 @@
                 rowCount = 0;
             }
         }
-        
-        // Agregar fila inicial al cargar
-        window.onload = function() {
-            agregarFila();
-        };
+
     </script>
 </body>
 </html>
