@@ -145,14 +145,30 @@ def logout():
 @app.route('/products')
 def get_products():
     productos = db.execute('SELECT * FROM productos')
-    #productos = ["michot", "gomos", "rico", "y sabroso"]
     return jsonify(productos)
+
+
+@app.route('/guardar', methods=["GET", "POST"])
+@csrf.exempt
+def guardar():
+    try:
+        if request.method == "POST":
+            datos = request.get_json()
+            print(datos)
+            print("ALGO DE ESPACIO")
+            for dato in datos["datos"]:
+                print(dato)
+            return jsonify("Guardado con éxito papa") #render_template("error.html", style="todo OK")
+    except:
+        return "ERROR"
 
 
 @app.route("/prueba", methods=["GET", "POST"])
 @login_required
-def prueba():    
-    return render_template("prueba.html", nombre="Pruebas")
+def prueba():
+    cobro = db.execute("SELECT * FROM metodo_cobro")
+    tipotrabajo = db.execute("SELECT * FROM tipo_trabajo")
+    return render_template("prueba.html", nombre="Pruebas", trabajos=tipotrabajo, cobros=cobro)
 
 
 @app.route("/minegocio", methods=["GET", "POST"])

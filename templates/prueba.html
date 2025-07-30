@@ -1,113 +1,47 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabla Dinámica con Inputs</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
-            min-height: 100vh;
-            padding: 20px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .card {
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            border: none;
-            overflow: hidden;
-        }
-        .card-header {
-            background: linear-gradient(to right, #3498db, #2c3e50);
-            color: white;
-            font-weight: 600;
-            padding: 15px 20px;
-        }
-        .table-responsive {
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        table {
-            margin-bottom: 0;
-        }
-        th {
-            background-color: #2c3e50;
-            color: white;
-            font-weight: 500;
-        }
-        .btn-add {
-            background: linear-gradient(to right, #2ecc71, #27ae60);
-            border: none;
-            transition: all 0.3s;
-        }
-        .btn-add:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(46, 204, 113, 0.4);
-        }
-        .btn-remove {
-            background: linear-gradient(to right, #e74c3c, #c0392b);
-            color: white;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-        }
-        .btn-remove:hover {
-            background: linear-gradient(to right, #c0392b, #e74c3c);
-        }
-        .input-cell input {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 6px 10px;
-            width: 100%;
-            transition: border 0.3s;
-        }
-        .input-cell input:focus {
-            border-color: #3498db;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-        }
-        .highlight {
-            animation: highlight 1.5s ease;
-        }
-        @keyframes highlight {
-            0% { background-color: rgba(46, 204, 113, 0.5); }
-            100% { background-color: transparent; }
-        }
-        .footer-info {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #555;
-        }
-    </style>
-</head>
-<body>
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ nombre }}
+{% endblock %}
+
+{% block body %}
+  
+
+
     <div class="container">
+        <div id="bootstrapAlert" class="alert alert-danger d-none" role="alert"></div>
+        <h2>Nuevo presupuesto</h2>
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="mb-0"><i class="fas fa-table me-2"></i>Tabla Dinámica con Inputs</h3>
-                    </div>
-                    <div class="card-body">
+                <div style="background: #f8f9fa; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);">
+                        <div class="container">
+                            <select class="form-select" name="trabajo" id="trabajo" required>
+                                    <option value="" selected>Tipo de trabajo</option>
+                                    {% for trabajo in trabajos %}
+                                    <option value="{{ trabajo.id }}">{{ trabajo.nombre }}</option>
+                                    {% endfor %}
+                            </select>
+                            <select class="form-select" name="cobro" id="cobro" required>
+                                    <option value="" selected>Tipo de cobro</option>
+                                    {% for cobro in cobros %}
+                                    <option value="{{ cobro.id }}">{{ cobro.COBRO }}</option>
+                                    {% endfor %}
+                            </select>
+                        </div>
                         <div class="table-responsive">
-                            <table id="miTabla" class="table table-hover">
+                            <table id="miTabla" class="table table-hover table-sm table-light">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>
+                                            <div class="text-wrap">
+                                                <span class="d-none d-md-inline">Cantidad</span>
+                                                <span class="d-inline d-md-none">Cant</span>
+                                            </div> 
+                                        </th>
                                         <th>Producto</th>
-                                        <th>Cantidad</th>
-                                        <th>Precio Unitario</th>
+                                        <th>Precio</th>
                                         <th>Total</th>
-                                        <th>Acciones</th>
+                                        <th>Borrar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -115,41 +49,47 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th colspan="4" class="text-end">Total General:</th>
-                                        <th id="totalGeneral">$0.00</th>
-                                        <th></th>
+                                        <th>Total:</th>
+                                        <th id="totalEfectivo">Efectivo: $0.00</th>
+                                        <th id="totalFactura">Factura: $0.00</th>
+                                        <th id="totalTarjeta">Tarjeta: $0.00</th>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="Efectivo" id="checkEfectivo">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="Factura" id="checkFactura">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="Tarjeta" id="checkTarjeta">
+                                            </div>
+                                        </td>
                                     </tr>
                                 </tfoot>
                             </table>
                         </div>
                         
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <button onclick="agregarFila()" class="btn btn-add">
-                                <i class="fas fa-plus me-2"></i>Agregar Fila
-                            </button>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <button onclick="agregarFila()" class="btn btn-dark">+</button>
                             
                             <div class="d-flex gap-2">
-                                <button onclick="guardarTabla()" class="btn btn-primary">
+                                <button onclick="guardarTabla()" class="btn btn-dark">
                                     <i class="fas fa-save me-2"></i>Guardar
                                 </button>
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <button onclick="resetTabla()" class="btn btn-danger">
                                     <i class="fas fa-trash me-2"></i>Limpiar
                                 </button>
                             </div>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="footer-info">
-                    <h5><i class="fas fa-info-circle me-2"></i>Instrucciones:</h5>
-                    <ul class="mt-3">
-                        <li>Haz clic en "Agregar Fila" para añadir nuevos productos a la tabla</li>
-                        <li>Completa los datos en los campos de entrada</li>
-                        <li>La columna "Total" se calcula automáticamente (Cantidad × Precio)</li>
-                        <li>Elimina filas individualmente con el botón <i class="fas fa-times"></i></li>
-                        <li>Usa "Guardar" para almacenar los datos o "Limpiar" para borrar todo</li>
-                    </ul>
-                </div>
+                </div>     
             </div>
         </div>
     </div>
@@ -158,21 +98,8 @@
 
         let rowCount = 0;        
 
-        async function obtenerProductosDesdeAPI() {
-            try {
-                const response = await fetch('/products');
-                const data = await response.json();
-                return data.productos;
-            } catch (error) {
-                console.error('Error al obtener productos:', error);
-                return [];
-            }
-        }
-
-        
         // Inicialización al cargar la página
         window.addEventListener('DOMContentLoaded', async () => {
-            productos = await obtenerProductosDesdeAPI();
             initTabla();
         });
         
@@ -190,10 +117,21 @@
             nuevaFila.classList.add("highlight");
             rowCount++;
             
-            // Celda para el número de fila
-            const celdaNumero = nuevaFila.insertCell();
-            celdaNumero.textContent = rowCount;
-            celdaNumero.className = "align-middle";
+             // Celda para la cantidad (con input number)
+            const celdaCantidad = nuevaFila.insertCell();
+            celdaCantidad.className = "input-cell";
+            
+            const inputCantidad = document.createElement("input");
+            inputCantidad.type = "number";
+            inputCantidad.id = "cantidad"
+            inputCantidad.name = "cantidad"+rowCount;
+            inputCantidad.min = "1";
+            inputCantidad.value = "1";
+            inputCantidad.className = "form-control";
+            inputCantidad.style = "max-width: 50px;"
+            inputCantidad.addEventListener("input", calcularTotales);
+            
+            celdaCantidad.appendChild(inputCantidad);
             
             // Celda para el nombre del producto (con select)
             const celdaProducto = nuevaFila.insertCell();
@@ -201,6 +139,7 @@
             
             const selectProducto = document.createElement("select");
             selectProducto.className = "form-select";
+            selectProducto.id = "producto"
             selectProducto.name = "Producto" + rowCount;
             
             // Agregar opción vacía
@@ -219,6 +158,8 @@
                         option.textContent = producto.nombre;
                         option.name = producto.nombre;
                         option.dataset.costo = producto.costo;
+                        option.dataset.ganancia = producto.ganancia;
+                        option.dataset.iva = producto.iva;
                         selectProducto.appendChild(option);
                     });
                     // Event listener para cambio de selección
@@ -226,7 +167,9 @@
                         const selectedOption = this.options[this.selectedIndex];
                         if (selectedOption.value) {
                             // Actualizar precio con el valor del dataset
-                            inputPrecio.value = parseFloat(selectedOption.dataset.costo).toFixed(2);
+                            const ganancia = parseFloat(selectedOption.dataset.ganancia);
+                            const iva = parseFloat(selectedOption.dataset.iva);
+                            inputPrecio.value = Math.round((parseFloat(selectedOption.dataset.costo) * (1+ganancia) * (1+iva)).toFixed(0) / 100) * 100;
                             calcularTotales();
                         } else {
                             inputPrecio.value = "0.00";
@@ -237,29 +180,18 @@
 
             celdaProducto.appendChild(selectProducto);
             
-            // Celda para la cantidad (con input number)
-            const celdaCantidad = nuevaFila.insertCell();
-            celdaCantidad.className = "input-cell";
-            
-            const inputCantidad = document.createElement("input");
-            inputCantidad.type = "number";
-            inputCantidad.name = "cantidad"+rowCount;
-            inputCantidad.min = "1";
-            inputCantidad.value = "1";
-            inputCantidad.className = "form-control";
-            inputCantidad.addEventListener("input", calcularTotales);
-            
-            celdaCantidad.appendChild(inputCantidad);
-            
             // Celda para el precio unitario (con input number)
             const celdaPrecio = nuevaFila.insertCell();
             celdaPrecio.className = "input-cell";
             
             const inputPrecio = document.createElement("input");
             inputPrecio.type = "number";
+            inputPrecio.id = "precio"
+            inputPrecio.disabled = true;
+            inputPrecio.name = "precio[]"
             inputPrecio.value = "0.00";
             inputPrecio.className = "form-control";
-            inputPrecio.addEventListener("onchange", calcularTotales);
+
             
             celdaPrecio.appendChild(inputPrecio);
             
@@ -274,8 +206,8 @@
             celdaAcciones.className = "align-middle";
             
             const btnEliminar = document.createElement("button");
-            btnEliminar.className = "btn btn-remove";
-            btnEliminar.innerHTML = '<i class="fas fa-times"></i>';
+            btnEliminar.className = "btn btn-danger btn-sm";
+            btnEliminar.innerHTML = 'x';
             btnEliminar.onclick = function() {
                 cuerpoTabla.removeChild(nuevaFila);
                 calcularTotales();
@@ -296,22 +228,30 @@
         function calcularTotales() {
             const filas = document.querySelectorAll("#miTabla tbody tr");
             let granTotal = 0;
+            let granTotalFactura = 0;
+            let granTotalTarjeta = 0;
             
             filas.forEach(fila => {
-                const cantidad = fila.querySelector('input[type="number"][name^="cantidad"]');
-                const precio = fila.querySelector('input[name="precio[]"]');
+                console.log(fila)
+                const cantidad = fila.querySelector('input[id="cantidad"]');
+                const precio = fila.querySelector('input[id="precio"]');
                 const totalCelda = fila.querySelector('td:nth-last-child(2)');
                 
                 if (cantidad && precio) {
+
                     const total = parseFloat(cantidad.value) * parseFloat(precio.value || 0);
-                    totalCelda.textContent = `$${total.toFixed(2)}`;
+                    totalCelda.textContent = `$${formatearNumero(total.toFixed(0))}`;
                     totalCelda.dataset.value = total;
-                    granTotal += total;
+                    granTotal += Math.round(total / 100) * 100;
+                    granTotalFactura += Math.round((total * 1.1) / 100) * 100;
+                    granTotalTarjeta += Math.round((total * 1.21) / 100) * 100;
                 }
             });
             
             // Actualizar total general
-            document.getElementById("totalGeneral").textContent = `$${totalGeneral.toFixed(2)}`;
+            document.getElementById("totalEfectivo").textContent = `Efectivo $${formatearNumero(granTotal.toFixed(0))}`;
+            document.getElementById("totalFactura").textContent = `Factura $${formatearNumero(granTotalFactura.toFixed(0))}`;
+            document.getElementById("totalTarjeta").textContent = `Tarjeta $${formatearNumero(granTotalTarjeta.toFixed(0))}`;
         }
         
         function reordenarNumeros() {
@@ -331,38 +271,68 @@
             
             const datos = [];
             filas.forEach(fila => {
-                const producto = fila.querySelector("select[name='producto[]']")?.value || "";
-                const cantidad = fila.querySelector("input[name='cantidad[]']")?.value || 0;
-                const precio = fila.querySelector("input[name='precio[]']")?.value || 0;
+                const select = fila.querySelector('select[id="producto"]');
+                const selectedOption = select.options[select.selectedIndex];
+                const productoId = selectedOption.value;
+                const productoNombre = selectedOption.textContent;
+                const cantidad = fila.querySelector('input[id="cantidad"]')?.value || 0;
+                const precio = fila.querySelector('input[id="precio"]')?.value || 0;
                 const total = fila.cells[4].dataset.value || 0;
                 
-                datos.push({
-                    producto,
+                if (productoId !== "") {
+                    datos.push({
+                    productoId,
+                    productoNombre,
                     cantidad,
                     precio,
                     total
                 });
+                }
             });
-            
-            // En un caso real, aquí enviarías los datos al servidor Flask
-            // Ejemplo con fetch:
-            /*
-            fetch('/guardar', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ datos })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Respuesta de Flask:', data);
-                alert('Datos guardados con éxito!');
+
+            const cobro = document.querySelector("#cobro").value;
+            const trabajo = document.querySelector("#trabajo").value;
+            const checkboxEfectovo = document.querySelector("#checkEfectivo");
+            const checkboxFactura = document.querySelector("#checkFactura");
+            const checkboxTarjeta = document.querySelector("#checkTarjeta");
+            const checks = document.querySelectorAll(".form-check-input");
+
+            checks.forEach(check => {
+                if (check.checked) {
+                    datos.push({
+                        "Pago": check.value
+                    });
+                }
             });
-            */
+
+
+            if (cobro.value !== "" && trabajo.value !== "") {
+                datos.push({
+                cobro,
+                trabajo
+                });
+            }
             
-            // Para este ejemplo solo mostramos un alert
-            alert(`Datos listos para enviar a Flask:\n${JSON.stringify(datos, null, 2)}`);
+            
+            if (datos.length !== 0) {
+                fetch('/guardar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ datos })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Respuesta de Flask:', data);
+                    showBootstrapAlert('Datos guardados con éxito!', type = 'success');
+                });
+            } else {
+                showBootstrapAlert('No hay productos agregados')
+            }
+            
+
+            
         }
         
         function resetTabla() {
@@ -374,6 +344,35 @@
             }
         }
 
+        function formatearNumero(numero) {
+            // Convertir a string y separar parte entera y decimal
+            const parteEntera = numero;
+            
+            // Formatear parte entera con comas
+            const parteEnteraFormateada = parteEntera
+                .split('')
+                .reverse()
+                .reduce((acc, digito, index) => {
+                    return (index % 3 === 0 && index !== 0) 
+                        ? digito + ',' + acc 
+                        : digito + acc;
+                }, '');
+            
+            return parteEnteraFormateada;
+        }
+
+        function showBootstrapAlert(message, type = 'danger') {
+            const alertDiv = document.getElementById('bootstrapAlert');
+            
+            // Configura el mensaje y el tipo (ej: 'danger', 'success', 'warning')
+            alertDiv.textContent = message;
+            alertDiv.className = `alert alert-${type} d-block`; // Muestra el alert
+
+            // Opcional: Auto-ocultar después de 5 segundos
+            setTimeout(() => {
+                alertDiv.classList.add('d-none');
+            }, 5000);
+        }
+
     </script>
-</body>
-</html>
+{% endblock %}
