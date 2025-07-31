@@ -5,8 +5,6 @@
 {% endblock %}
 
 {% block body %}
-  
-
 
     <div class="container">
         <div id="bootstrapAlert" class="alert alert-danger d-none" role="alert"></div>
@@ -15,18 +13,26 @@
             <div class="col-lg-10">
                 <div style="background: #f8f9fa; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);">
                         <div class="container">
-                            <select class="form-select" name="trabajo" id="trabajo" required>
-                                    <option value="" selected>Tipo de trabajo</option>
-                                    {% for trabajo in trabajos %}
-                                    <option value="{{ trabajo.id }}">{{ trabajo.nombre }}</option>
-                                    {% endfor %}
-                            </select>
-                            <select class="form-select" name="cobro" id="cobro" required>
-                                    <option value="" selected>Tipo de cobro</option>
-                                    {% for cobro in cobros %}
-                                    <option value="{{ cobro.id }}">{{ cobro.COBRO }}</option>
-                                    {% endfor %}
-                            </select>
+                            <div class="row">
+                                <div class="col">
+                                    <select class="form-select" name="trabajo" id="trabajo" required>
+                                        <option value="" selected>Tipo de trabajo</option>
+                                        {% for trabajo in trabajos %}
+                                        <option value="{{ trabajo.id }}">{{ trabajo.nombre }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <select class="form-select" name="cobro" id="cobro" required>
+                                        <option value="" selected>Tipo de cobro</option>
+                                        {% for cobro in cobros %}
+                                        <option value="{{ cobro.id }}">{{ cobro.COBRO }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            
                         </div>
                         <div class="table-responsive">
                             <table id="miTabla" class="table table-hover table-sm table-light">
