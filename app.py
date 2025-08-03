@@ -12,6 +12,7 @@ from logging.handlers import RotatingFileHandler
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFProtect
+import sqlite3
 
 with open('datos.key', 'r', encoding='utf-8') as archivo:
     lineas = archivo.readlines()  # Lista donde cada elemento es una línea
@@ -151,17 +152,94 @@ def get_products():
 @app.route('/guardar', methods=["GET", "POST"])
 @csrf.exempt
 def guardar():
-    try:
-        if request.method == "POST":
-            datos = request.get_json()
-            print(datos)
-            print("ALGO DE ESPACIO")
-            for dato in datos["datos"]:
-                print(dato)
-            return jsonify("Guardado con éxito papa") #render_template("error.html", style="todo OK")
-    except:
-        return "ERROR"
+    ventas = {
+        "id_empresa": 1,
+        "fecha": datetime.now().strftime("%d/%m/%Y"),
+        "cobro": 0,
+        "valor": 0,
+        "tipotrabajo": 0
+        }
 
+    if request.method == "POST":
+        datos = request.get_json()
+        #print(datos)
+        for dato in datos["datos"]:
+            if "productoId" in dato:
+                ventas["valor"] += int(dato["total"])
+            elif "cobro" in dato:
+                ventas["cobro"] = dato["cobro"]
+                ventas["tipotrabajo"] = dato["trabajo"]
+            elif "Pago" in dato:
+                if dato["Pago"] == "Factura":
+                    ventas["valor"] = ventas["valor"] * 1.1
+                elif dato["Pago"] == "Tarjeta":
+                    ventas["valor"] = ventas["valor"] * 1.1 * 1.1
+
+        print(ventas)
+        #print("AAAAAAAAAALGOOOOOOOOOOOO")
+        valores = (
+            ventas['id_empresa'],
+            ventas['fecha'],
+            ventas['cobro'],
+            ventas['valor'],
+            ventas['tipotrabajo']
+        )
+
+        db.execute("INSERT INTO ventas (id_empresa, fecha, cobro, valor, tipotrabajo) VALUES (?, ?, ?, ?, ?)", ventas['id_empresa'],
+                                                                                                                ventas['fecha'],
+                                                                                                                ventas['cobro'],
+                                                                                                                ventas['valor'],
+                                                                                                                ventas['tipotrabajo'])
+
+        productos = []
+        record = {
+            "id_venta":0,
+            "id_producto":0,
+            "cantidad":0,
+            "valor":0
+        }
+        registro = db.execute("SELECT * FROM ventas ORDER BY id DESC LIMIT 1")
+        print(registro[0]["id"])
+        print("AAAAAAAAAALGOOOOOOOOOOOO")
+        record["id_venta"] = registro[0]["id"]
+        for dato in datos["datos"]:
+            if "productoId" in dato:
+                record["id_producto"] = dato["productoId"]
+                record["cantidad"] = dato["cantidad"]
+                record["valor"] = dato["total"]
+
+                recordo = (
+                    record["id_venta"],
+                    record["id_producto"],
+                    record["cantidad"],
+                    record["valor"]
+                )
+
+                productos.append(recordo)
+
+        print(record)
+
+        conexion = sqlite3.connect("database.db")
+        cursor = conexion.cursor()
+        cursor.executemany('''
+                INSERT OR REPLACE INTO venta_items (id_venta, id_producto, cantidad, valor)
+                VALUES (?, ?, ?, ?)
+                ''', productos)
+        conexion.commit()
+
+        #db.execute("INSERT INTO venta_items (id_venta, id_producto, cantidad, valor) VALUES (?, ?, ?, ?)", productos)
+
+    return jsonify(ventas, productos)
+
+
+@app.route('/pruebas', methods=["GET", "POST"])
+@csrf.exempt
+def pruebas():
+    productos = db.execute("SELECT * FROM productos")
+    cobro = db.execute("SELECT * FROM metodo_cobro")
+    tipotrabajo = db.execute("SELECT * FROM tipo_trabajo")
+
+    return render_template("pruebas.html", productos = productos, trabajos=tipotrabajo, cobros=cobro)
 
 @app.route("/prueba", methods=["GET", "POST"])
 @login_required
@@ -180,7 +258,21 @@ def minegocio():
 @app.route("/cargadiaria", methods=["GET", "POST"])
 @login_required
 def cargadiaria():
-    return render_template("cargadiaria.html", nombre="Mi Negocio")
+    ventas = db.execute("SELECT ventas.id, ventas.fecha, ventas.valor, metodo_cobro.COBRO, tipo_trabajo.nombre FROM ventas JOIN metodo_cobro ON metodo_cobro.id = ventas.cobro JOIN tipo_trabajo ON tipo_trabajo.id = ventas.tipotrabajo")
+
+    cobro = db.execute("SELECT * FROM metodo_cobro")
+    tipotrabajo = db.execute("SELECT * FROM tipo_trabajo")
+
+    return render_template("cargadiaria.html", ventas=ventas, trabajos=tipotrabajo, cobros=cobro, nombre="Mi Negocio")
+
+@app.route("/get_venta_items/<int:venta_id>")
+@login_required
+def get_venta_items(venta_id):
+    items = db.execute("SELECT * FROM venta_items INNER JOIN productos ON productos.id = venta_items.id_producto WHERE venta_items.id_venta = ?", venta_id)
+    #print(items)
+    #items = db.execute("SELECT * FROM venta_items WHERE id_venta = ?", venta_id)
+    #items = db.execute("SELECT * FROM venta_items INNER JOIN productos ON venta_items.id_producto = productos.id WHERE venta_items.id_venta = ?", venta_id)
+    return jsonify(items)
 
 
 @app.route("/presupuestos", methods=["GET", "POST"])

@@ -5,104 +5,98 @@
 {% endblock %}
 
 {% block body %}
-
     <div class="container">
         <div id="bootstrapAlert" class="alert alert-danger d-none" role="alert"></div>
         <h2>Nuevo presupuesto</h2>
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div style="background: #f8f9fa; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col">
-                                    <select class="form-select" name="trabajo" id="trabajo" required>
-                                        <option value="" selected>Tipo de trabajo</option>
-                                        {% for trabajo in trabajos %}
-                                        <option value="{{ trabajo.id }}">{{ trabajo.nombre }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="col">
-                                    <select class="form-select" name="cobro" id="cobro" required>
-                                        <option value="" selected>Tipo de cobro</option>
-                                        {% for cobro in cobros %}
-                                        <option value="{{ cobro.id }}">{{ cobro.COBRO }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
+        <div class="container border border-1 mb-2" style="background: #f8f9fa; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);">
+            <div class="row mt-3">
+                <div class="col">
+                    <select class="form-select" name="trabajo" id="trabajo" required>
+                        <option value="" selected>Tipo de trabajo</option>
+                        {% for trabajo in trabajos %}
+                        <option value="{{ trabajo.id }}">{{ trabajo.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col">
+                    <select class="form-select" name="cobro" id="cobro" required>
+                        <option value="" selected>Tipo de cobro</option>
+                        {% for cobro in cobros %}
+                        <option value="{{ cobro.id }}">{{ cobro.COBRO }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            
+        
+        <div class="table-responsive">
+            <table id="miTabla" class="table table-hover table-sm table-light">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class="text-wrap">
+                                <span class="d-none d-md-inline">Cantidad</span>
+                                <span class="d-inline d-md-none">Cant</span>
+                            </div> 
+                        </th>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Total</th>
+                        <th>Borrar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filas se agregarán aquí -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Total:</th>
+                        <th id="totalEfectivo">Efectivo: $0.00</th>
+                        <th id="totalFactura">Factura: $0.00</th>
+                        <th id="totalTarjeta">Tarjeta: $0.00</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Efectivo" id="checkEfectivo">
                             </div>
-                            
-                            
-                        </div>
-                        <div class="table-responsive">
-                            <table id="miTabla" class="table table-hover table-sm table-light">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <div class="text-wrap">
-                                                <span class="d-none d-md-inline">Cantidad</span>
-                                                <span class="d-inline d-md-none">Cant</span>
-                                            </div> 
-                                        </th>
-                                        <th>Producto</th>
-                                        <th>Precio</th>
-                                        <th>Total</th>
-                                        <th>Borrar</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Filas se agregarán aquí -->
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>Total:</th>
-                                        <th id="totalEfectivo">Efectivo: $0.00</th>
-                                        <th id="totalFactura">Factura: $0.00</th>
-                                        <th id="totalTarjeta">Tarjeta: $0.00</th>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="Efectivo" id="checkEfectivo">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="Factura" id="checkFactura">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="Tarjeta" id="checkTarjeta">
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <button onclick="agregarFila()" class="btn btn-dark">+</button>
-                            
-                            <div class="d-flex gap-2">
-                                <button onclick="guardarTabla()" class="btn btn-dark">
-                                    <i class="fas fa-save me-2"></i>Guardar
-                                </button>
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                <button onclick="resetTabla()" class="btn btn-danger">
-                                    <i class="fas fa-trash me-2"></i>Limpiar
-                                </button>
+                        </td>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Factura" id="checkFactura">
                             </div>
-                        </div>
-                </div>     
+                        </td>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Tarjeta" id="checkTarjeta">
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <button onclick="agregarFila()" class="btn btn-dark">+</button>
+            
+            <div class="d-flex gap-2">
+                <button onclick="guardarTabla()" class="btn btn-dark">
+                    <i class="fas fa-save me-2"></i>Guardar
+                </button>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button onclick="resetTabla()" class="btn btn-danger">
+                    <i class="fas fa-trash me-2"></i>Limpiar
+                </button>
             </div>
         </div>
-    </div>
+    </div>     
+</div>
 
     <script>
 
-        let rowCount = 0;        
+        let rowCount = 0;
 
         // Inicialización al cargar la página
         window.addEventListener('DOMContentLoaded', async () => {
@@ -163,7 +157,7 @@
                         option.value = producto.id;
                         option.textContent = producto.nombre;
                         option.name = producto.nombre;
-                        option.dataset.costo = producto.costo;
+                        option.dataset.costo = producto.efectivo;
                         option.dataset.ganancia = producto.ganancia;
                         option.dataset.iva = producto.iva;
                         selectProducto.appendChild(option);
@@ -175,7 +169,7 @@
                             // Actualizar precio con el valor del dataset
                             const ganancia = parseFloat(selectedOption.dataset.ganancia);
                             const iva = parseFloat(selectedOption.dataset.iva);
-                            inputPrecio.value = Math.round((parseFloat(selectedOption.dataset.costo) * (1+ganancia) * (1+iva)).toFixed(0) / 100) * 100;
+                            inputPrecio.value = Math.round((parseFloat(selectedOption.dataset.costo)).toFixed(0) / 100) * 100;
                             calcularTotales();
                         } else {
                             inputPrecio.value = "0.00";
@@ -283,7 +277,7 @@
                 const productoNombre = selectedOption.textContent;
                 const cantidad = fila.querySelector('input[id="cantidad"]')?.value || 0;
                 const precio = fila.querySelector('input[id="precio"]')?.value || 0;
-                const total = fila.cells[4].dataset.value || 0;
+                const total = fila.cells[3].dataset.value || 0;
                 
                 if (productoId !== "") {
                     datos.push({
@@ -298,7 +292,7 @@
 
             const cobro = document.querySelector("#cobro").value;
             const trabajo = document.querySelector("#trabajo").value;
-            const checkboxEfectovo = document.querySelector("#checkEfectivo");
+            const checkboxEfectivo = document.querySelector("#checkEfectivo");
             const checkboxFactura = document.querySelector("#checkFactura");
             const checkboxTarjeta = document.querySelector("#checkTarjeta");
             const checks = document.querySelectorAll(".form-check-input");
@@ -306,7 +300,7 @@
             checks.forEach(check => {
                 if (check.checked) {
                     datos.push({
-                        "Pago": check.value
+                        "Pago": check.value,
                     });
                 }
             });

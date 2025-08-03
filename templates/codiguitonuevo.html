@@ -1,0 +1,602 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ nombre }}
+{% endblock %}
+
+{% block body %}
+
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            padding-top: 20px;
+            padding-bottom: 40px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .card-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-color), #1a2530);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .input-group-mobile {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .table th {
+            background-color: var(--primary-color);
+            color: white;
+            vertical-align: middle;
+        }
+        
+        .highlight {
+            animation: highlight 1.5s ease;
+        }
+        
+        @keyframes highlight {
+            0% { background-color: rgba(46, 204, 113, 0.4); }
+            100% { background-color: transparent; }
+        }
+        
+        .summary-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .btn-custom {
+            background-color: var(--primary-color);
+            border: none;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 6px;
+        }
+        
+        .btn-custom:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger-custom {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-danger-custom:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-add {
+            font-size: 1.2rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50% !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .responsive-table {
+            overflow-x: auto;
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .delete-btn {
+            min-width: 36px;
+            height: 36px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 768px) {
+            .input-group-mobile .col-md-6 {
+                width: 100%;
+            }
+            
+            .btn-text {
+                display: none;
+            }
+            
+            .btn-icon {
+                display: inline-block !important;
+            }
+            
+            .table thead {
+                display: none;
+            }
+            
+            .table, .table tbody, .table tr, .table td {
+                display: block;
+                width: 100%;
+            }
+            
+            .table tr {
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                padding: 10px;
+                position: relative;
+            }
+            
+            .table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .table td:last-child {
+                border-bottom: none;
+            }
+            
+            .table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                font-weight: bold;
+                text-align: left;
+            }
+            
+            .btn-group-mobile {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn-group-mobile .btn {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <div class="container">
+        <div class="header-section text-center">
+            <h1><i class="fas fa-file-invoice-dollar me-2"></i>Sistema de Presupuestos</h1>
+            <p class="lead">Crea y gestiona tus presupuestos de forma eficiente</p>
+        </div>
+        
+        <div id="bootstrapAlert" class="alert alert-danger d-none" role="alert"></div>
+        
+        <div class="card-container">
+            <div class="card border-0">
+                <div class="card-header bg-white">
+                    <h3 class="section-title mb-0"><i class="fas fa-plus-circle me-2"></i>Nuevo Presupuesto</h3>
+                </div>
+                
+                <div class="card-body">
+                    <div class="mb-4">
+                        <div class="input-group-mobile row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><i class="fas fa-briefcase me-2"></i>Tipo de trabajo</label>
+                                <select class="form-select" name="trabajo" id="trabajo" required>
+                                    <option value="" selected>Seleccione un tipo de trabajo</option>
+                                    <option value="1">Trabajo de diseño</option>
+                                    <option value="2">Desarrollo web</option>
+                                    <option value="3">Consultoría</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><i class="fas fa-money-bill-wave me-2"></i>Tipo de cobro</label>
+                                <select class="form-select" name="cobro" id="cobro" required>
+                                    <option value="" selected>Seleccione un método de pago</option>
+                                    <option value="1">Efectivo</option>
+                                    <option value="2">Transferencia</option>
+                                    <option value="3">Tarjeta de crédito</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h5 class="mb-3 fw-bold"><i class="fas fa-list me-2"></i>Detalles del Presupuesto</h5>
+                    
+                    <div class="responsive-table">
+                        <table id="miTabla" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">
+                                        <div class="text-wrap">
+                                            <span>Cantidad</span>
+                                        </div> 
+                                    </th>
+                                    <th>Producto/Servicio</th>
+                                    <th style="width: 120px;">Precio Unitario</th>
+                                    <th style="width: 120px;">Total</th>
+                                    <th style="width: 60px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Filas se agregarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end mt-3">
+                        <button onclick="agregarFila()" class="btn btn-dark btn-add">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="summary-card mt-4">
+                        <h5 class="mb-3 fw-bold"><i class="fas fa-calculator me-2"></i>Resumen de Pagos</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <div class="payment-method">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="Efectivo" id="checkEfectivo">
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold">Efectivo</div>
+                                        <div id="totalEfectivo">$0.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <div class="payment-method">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="Factura" id="checkFactura">
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold">Factura</div>
+                                        <div id="totalFactura">$0.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="payment-method">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="Tarjeta" id="checkTarjeta">
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold">Tarjeta</div>
+                                        <div id="totalTarjeta">$0.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 gap-2">
+                        <div>
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        </div>
+                        
+                        <div class="d-flex flex-wrap gap-2">
+                            <button onclick="guardarTabla()" class="btn btn-custom">
+                                <i class="fas fa-save me-2"></i>
+                                <span class="btn-text">Guardar Presupuesto</span>
+                                <span class="btn-icon d-none"><i class="fas fa-save"></i></span>
+                            </button>
+                            <button onclick="resetTabla()" class="btn btn-danger-custom">
+                                <i class="fas fa-trash me-2"></i>
+                                <span class="btn-text">Limpiar Todo</span>
+                                <span class="btn-icon d-none"><i class="fas fa-trash"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let rowCount = 0;        
+
+        // Inicialización al cargar la página
+        window.addEventListener('DOMContentLoaded', async () => {
+            initTabla();
+        });
+        
+        function initTabla() {
+            document.getElementById('miTabla').style.display = 'table';
+            agregarFila();
+        }
+        
+        function agregarFila() {
+            const tabla = document.getElementById("miTabla");
+            const cuerpoTabla = tabla.getElementsByTagName("tbody")[0];
+            
+            // Crear nueva fila
+            const nuevaFila = cuerpoTabla.insertRow();
+            nuevaFila.classList.add("highlight");
+            rowCount++;
+            
+            // Celda para la cantidad (con input number)
+            const celdaCantidad = nuevaFila.insertCell();
+            celdaCantidad.className = "input-cell";
+            celdaCantidad.setAttribute('data-label', 'Cantidad');
+            
+            const inputCantidad = document.createElement("input");
+            inputCantidad.type = "number";
+            inputCantidad.id = "cantidad"
+            inputCantidad.name = "cantidad"+rowCount;
+            inputCantidad.min = "1";
+            inputCantidad.value = "1";
+            inputCantidad.className = "form-control";
+            inputCantidad.style = "max-width: 80px;"
+            inputCantidad.addEventListener("input", calcularTotales);
+            
+            celdaCantidad.appendChild(inputCantidad);
+            
+            // Celda para el nombre del producto (con select)
+            const celdaProducto = nuevaFila.insertCell();
+            celdaProducto.className = "input-cell";
+            celdaProducto.setAttribute('data-label', 'Producto');
+            
+            const selectProducto = document.createElement("select");
+            selectProducto.className = "form-select";
+            selectProducto.id = "producto"
+            selectProducto.name = "Producto" + rowCount;
+            
+            // Agregar opción vacía
+            const defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.textContent = "Seleccione un producto";
+            selectProducto.appendChild(defaultOption);
+            
+            // Agregar opciones de productos
+            // Simulamos datos de productos para el ejemplo
+            const productos = [
+                {id: 1, nombre: "Diseño de logo", costo: 5000, ganancia: 0.5, iva: 0.21},
+                {id: 2, nombre: "Sitio web básico", costo: 15000, ganancia: 0.6, iva: 0.21},
+                {id: 3, nombre: "Sitio web avanzado", costo: 30000, ganancia: 0.7, iva: 0.21},
+                {id: 4, nombre: "Mantenimiento mensual", costo: 5000, ganancia: 0.4, iva: 0.21},
+                {id: 5, nombre: "Consultoría SEO", costo: 8000, ganancia: 0.55, iva: 0.21}
+            ];
+            
+            productos.forEach(producto => {
+                const option = document.createElement("option");
+                option.value = producto.id;
+                option.textContent = producto.nombre;
+                option.name = producto.nombre;
+                option.dataset.costo = producto.costo;
+                option.dataset.ganancia = producto.ganancia;
+                option.dataset.iva = producto.iva;
+                selectProducto.appendChild(option);
+            });
+            
+            // Event listener para cambio de selección
+            selectProducto.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const inputPrecio = this.closest('tr').querySelector('input[id="precio"]');
+                
+                if (selectedOption.value) {
+                    // Actualizar precio con el valor del dataset
+                    const ganancia = parseFloat(selectedOption.dataset.ganancia);
+                    const iva = parseFloat(selectedOption.dataset.iva);
+                    const precioCalculado = Math.round(parseFloat(selectedOption.dataset.costo) * (1+ganancia) * (1+iva));
+                    inputPrecio.value = precioCalculado;
+                    calcularTotales();
+                } else {
+                    inputPrecio.value = "0";
+                }
+            });
+           
+            celdaProducto.appendChild(selectProducto);
+            
+            // Celda para el precio unitario (con input number)
+            const celdaPrecio = nuevaFila.insertCell();
+            celdaPrecio.className = "input-cell";
+            celdaPrecio.setAttribute('data-label', 'Precio');
+            
+            const inputPrecio = document.createElement("input");
+            inputPrecio.type = "number";
+            inputPrecio.id = "precio"
+            inputPrecio.disabled = true;
+            inputPrecio.name = "precio[]"
+            inputPrecio.value = "0";
+            inputPrecio.className = "form-control";
+            inputPrecio.style = "max-width: 120px;"
+
+            celdaPrecio.appendChild(inputPrecio);
+            
+            // Celda para el total (calculado automáticamente)
+            const celdaTotal = nuevaFila.insertCell();
+            celdaTotal.className = "align-middle fw-bold";
+            celdaTotal.setAttribute('data-label', 'Total');
+            celdaTotal.textContent = "$0.00";
+            celdaTotal.dataset.value = "0";
+            
+            // Celda para el botón de eliminar
+            const celdaAcciones = nuevaFila.insertCell();
+            celdaAcciones.className = "align-middle";
+            celdaAcciones.setAttribute('data-label', 'Acciones');
+            
+            const btnEliminar = document.createElement("button");
+            btnEliminar.className = "btn btn-sm btn-danger delete-btn";
+            btnEliminar.innerHTML = '<i class="fas fa-times"></i>';
+            btnEliminar.title = "Eliminar fila";
+            btnEliminar.onclick = function() {
+                cuerpoTabla.removeChild(nuevaFila);
+                calcularTotales();
+            };
+            
+            celdaAcciones.appendChild(btnEliminar);
+            
+            // Calcular totales después de agregar fila
+            calcularTotales();
+            
+            // Remover efecto de highlight después de la animación
+            setTimeout(() => {
+                nuevaFila.classList.remove("highlight");
+            }, 1500);
+        }
+        
+        function calcularTotales() {
+            const filas = document.querySelectorAll("#miTabla tbody tr");
+            let granTotal = 0;
+            let granTotalFactura = 0;
+            let granTotalTarjeta = 0;
+            
+            filas.forEach(fila => {
+                const cantidad = fila.querySelector('input[id="cantidad"]');
+                const precio = fila.querySelector('input[id="precio"]');
+                const totalCelda = fila.querySelector('td:nth-last-child(2)');
+                
+                if (cantidad && precio) {
+                    const cant = parseFloat(cantidad.value) || 0;
+                    const prec = parseFloat(precio.value) || 0;
+                    const total = cant * prec;
+                    
+                    totalCelda.textContent = `$${formatearNumero(total.toFixed(0))}`;
+                    totalCelda.dataset.value = total;
+                    
+                    granTotal += Math.round(total / 100) * 100;
+                    granTotalFactura += Math.round((total * 1.1) / 100) * 100;
+                    granTotalTarjeta += Math.round((total * 1.21) / 100) * 100;
+                }
+            });
+            
+            // Actualizar total general
+            document.getElementById("totalEfectivo").textContent = `$${formatearNumero(granTotal.toFixed(0))}`;
+            document.getElementById("totalFactura").textContent = `$${formatearNumero(granTotalFactura.toFixed(0))}`;
+            document.getElementById("totalTarjeta").textContent = `$${formatearNumero(granTotalTarjeta.toFixed(0))}`;
+        }
+        
+        function guardarTabla() {
+            const filas = document.querySelectorAll("#miTabla tbody tr");
+            if (filas.length === 0) {
+                showBootstrapAlert('No hay productos para guardar. Agregue al menos un producto.', 'warning');
+                return;
+            }
+            
+            const datos = [];
+            let hasProducts = false;
+            
+            filas.forEach(fila => {
+                const select = fila.querySelector('select[id="producto"]');
+                const selectedOption = select.options[select.selectedIndex];
+                const productoId = selectedOption.value;
+                const productoNombre = selectedOption.textContent;
+                const cantidad = fila.querySelector('input[id="cantidad"]')?.value || 0;
+                const precio = fila.querySelector('input[id="precio"]')?.value || 0;
+                const total = fila.querySelector('td:nth-last-child(2)').dataset.value || 0;
+                
+                if (productoId !== "") {
+                    datos.push({
+                        productoId,
+                        productoNombre,
+                        cantidad,
+                        precio,
+                        total
+                    });
+                    hasProducts = true;
+                }
+            });
+
+            if (!hasProducts) {
+                showBootstrapAlert('No hay productos válidos para guardar. Seleccione al menos un producto.', 'warning');
+                return;
+            }
+            
+            const cobro = document.querySelector("#cobro").value;
+            const trabajo = document.querySelector("#trabajo").value;
+            const checks = document.querySelectorAll(".form-check-input:checked");
+
+            if (checks.length === 0) {
+                showBootstrapAlert('Seleccione al menos un método de pago', 'warning');
+                return;
+            }
+
+            if (!cobro || !trabajo) {
+                showBootstrapAlert('Complete todos los campos requeridos', 'warning');
+                return;
+            }
+
+            checks.forEach(check => {
+                datos.push({
+                    "Pago": check.value
+                });
+            });
+
+            datos.push({
+                cobro,
+                trabajo
+            });
+            
+            // Simulación de éxito
+            showBootstrapAlert('Presupuesto guardado con éxito!', 'success');
+            console.log('Datos a enviar:', datos);
+        }
+        
+        function resetTabla() {
+            if (confirm("¿Estás seguro de que deseas limpiar todos los datos?")) {
+                const cuerpoTabla = document.querySelector("#miTabla tbody");
+                cuerpoTabla.innerHTML = "";
+                document.querySelector("#trabajo").value = "";
+                document.querySelector("#cobro").value = "";
+                
+                document.querySelectorAll('.form-check-input').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                
+                calcularTotales();
+                rowCount = 0;
+                
+                showBootstrapAlert('Todos los datos han sido limpiados', 'info');
+            }
+        }
+
+        function formatearNumero(numero) {
+            return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function showBootstrapAlert(message, type = 'danger') {
+            const alertDiv = document.getElementById('bootstrapAlert');
+            
+            // Configura el mensaje y el tipo
+            alertDiv.innerHTML = message;
+            alertDiv.className = `alert alert-${type} d-block`;
+            
+            // Auto-ocultar después de 5 segundos
+            setTimeout(() => {
+                alertDiv.classList.add('d-none');
+            }, 5000);
+        }
+    </script>
+{% endblock %}

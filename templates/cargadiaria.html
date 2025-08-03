@@ -7,7 +7,7 @@
 {% block body %}
 
 <div class="container">
-
+<div id="bootstrapAlert" class="alert alert-danger d-none" role="alert"></div>
     <!-- Carga de datos a la base de datos -->
      <h2>Carga diaria</h2>
 
@@ -21,65 +21,88 @@
             <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushCargadiaria">
                 <div class="accordion-body">
                     
-                    <form action="/cargadiaria" method="post" class="container py-4 needs-validation mb-2"  novalidate>
-
-                        <div class="row">
-                            <div class="col">
-                                <label for="fechaCarga" class="form-label fw-bold">Fecha</label>
-                                <input style="min-width: 150px;" id="fechaCarga" name="fechaCarga" class="form-control" type="date" required />
+                    <div class="row mt-3">
+                <div class="col">
+                    <select class="form-select" name="trabajo" id="trabajo" required>
+                        <option value="" selected>Tipo de trabajo</option>
+                        {% for trabajo in trabajos %}
+                        <option value="{{ trabajo.id }}">{{ trabajo.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col">
+                    <select class="form-select" name="cobro" id="cobro" required>
+                        <option value="" selected>Tipo de cobro</option>
+                        {% for cobro in cobros %}
+                        <option value="{{ cobro.id }}">{{ cobro.COBRO }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            
+        
+        <div class="table-responsive">
+            <table id="miTabla" class="table table-hover table-sm table-light">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class="text-wrap">
+                                <span class="d-none d-md-inline">Cantidad</span>
+                                <span class="d-inline d-md-none">Cant</span>
+                            </div> 
+                        </th>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Total</th>
+                        <th>Borrar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filas se agregarán aquí -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Total:</th>
+                        <th id="totalEfectivo">Efectivo: $0.00</th>
+                        <th id="totalFactura">Factura: $0.00</th>
+                        <th id="totalTarjeta">Tarjeta: $0.00</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Efectivo" id="checkEfectivo">
                             </div>
-                            <div class="col">
-                                <label for="tipoCobro" class="form-label fw-bold">Tipo de cobro</label>
-                                <select style="min-width: 150px;" class="form-select" name="tipoCobro" required>
-                                    <option value="" selected>Tipo de cobro</option>
-                                    <!-- {% for local in locales %}
-                                    <option value="{{ local.nombre }}">{{ local.nombre }}</option>
-                                    {% endfor %} -->
-                                </select>
+                        </td>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Factura" id="checkFactura">
                             </div>
-                            <div class="col">
-                                <label for="valor" class="form-label fw-bold">Valor</label>
-                                <input style="min-width: 150px;" type="number" class="form-control" id="valor" name="valor">
+                        </td>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Tarjeta" id="checkTarjeta">
                             </div>
-                            <div class="col">
-                                <label for="tipoTrabajo" class="form-label fw-bold">Tipo de trabajo</label>
-                                <select style="min-width: 150px;" class="form-select" name="tipoTrabajo" required>
-                                    <option value="" selected>Tipo de trabajo</option>
-                                    <!-- {% for local in locales %}
-                                    <option value="{{ local.nombre }}">{{ local.nombre }}</option>
-                                    {% endfor %} -->
-                                </select>
-                            </div>
-                            <div class="col">
-                                <label for="cantidad" class="form-label fw-bold">Cantidad</label>
-                                <input style="min-width: 150px;" type="number" class="form-control" id="cantidad" name="cantidad">
-                            </div>
-                            <div class="col">
-                                <label for="mpUtilizada" class="form-label fw-bold">MP Utilizada</label>
-                                <select style="min-width: 150px;" class="form-select" name="mpUtilizada" required>
-                                    <option value="" selected>MP Utilizada</option>
-                                    <!-- {% for local in locales %}
-                                    <option value="{{ local.nombre }}">{{ local.nombre }}</option>
-                                    {% endfor %} -->
-                                </select>
-                            </div>
-                            <div class="col">
-                                <label for="local" class="form-label fw-bold">Local</label>
-                                <select style="min-width: 150px;" class="form-select" name="local" required>
-                                    <option value="" selected>Nro Local</option>
-                                    <!-- {% for local in locales %}
-                                    <option value="{{ local.nombre }}">{{ local.nombre }}</option>
-                                    {% endfor %} -->
-                                </select>
-                            </div>
-                        </div>
-
-
-                        <div class="d-flex justify-content-center mt-3">
-                            <button class="btn btn-dark" type="submit">Cargar al sistema</button>
-                        </div>
-
-                    </form>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <button onclick="agregarFila()" class="btn btn-dark">+</button>
+            
+            <div class="d-flex gap-2">
+                <button onclick="guardarTabla()" class="btn btn-dark">
+                    <i class="fas fa-save me-2"></i>Guardar
+                </button>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button onclick="resetTabla()" class="btn btn-danger">
+                    <i class="fas fa-trash me-2"></i>Limpiar
+                </button>
+            </div>
+        </div>
                     
 
                 </div>
@@ -96,28 +119,388 @@
                     <th scope="col">Tipo de cobro</th>
                     <th scope="col">Valor</th>
                     <th scope="col">Tipo de trabajo</th>
-                    <th scope="col">Cantidad</th>
-                    <th scope="col">MP utilizada</th>
-                    <th scope="col">Local</th>
+                    <th scope="col">Tipo de trabajo</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Parte de la tabla que hay que ITERAR con la base de datos del día de la fecha --> 
-                
-                <tr>
-                    <td scope="row">4/7/2025</td>
-                    <td>Cobro</td>
-                    <td>$5000</td>
-                    <td>Tipo de laburo</td>
-                    <td>1</td>
-                    <td>Llave X</td>
-                    <td>Local 1</td>
-                </tr>
-                
+                {% for venta in ventas %}
+                    <tr>
+                        <td scope="row">{{ venta["fecha"] }}</td>
+                        <td>{{ venta["COBRO"] }}</td>
+                        <td>$ {{ venta["valor"] | round(2) }}</td>
+                        <td>{{ venta["nombre"] }}</td>
+                        <td>
+                            <!-- Botón que abre el modal con ID único -->
+                            <button type="button" class="btn btn-dark btn-detalle" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modalDetalle{{ venta['id'] }}"
+                                    data-venta-id="{{ venta['id'] }}">
+                                Detalle
+                            </button>
+
+                            <!-- Modal con ID único para cada venta -->
+                            <div class="modal fade" id="modalDetalle{{ venta['id'] }}" tabindex="-1" 
+                                aria-labelledby="modalDetalleLabel{{ venta['id'] }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalDetalleLabel{{ venta['id'] }}">
+                                                Detalle de venta #{{ venta['id'] }}
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table table-striped table-hover table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Producto</th>
+                                                        <th scope="col">Cantidad</th>
+                                                        <th scope="col">Valor</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="items-body-{{ venta['id'] }}">
+                                                    <!-- Los items se cargarán aquí dinámicamente -->
+                                                    <tr>
+                                                        <td colspan="3" class="text-center">Cargando productos...</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
 
 </div>
 
+<script>
+let rowCount = 0;
+
+        // Inicialización al cargar la página
+        window.addEventListener('DOMContentLoaded', async () => {
+            initTabla();
+        });
+        
+        function initTabla() {
+            document.getElementById('miTabla').style.display = 'table';
+            agregarFila();
+        }
+        
+        function agregarFila() {
+            const tabla = document.getElementById("miTabla");
+            const cuerpoTabla = tabla.getElementsByTagName("tbody")[0];
+            
+            // Crear nueva fila
+            const nuevaFila = cuerpoTabla.insertRow();
+            nuevaFila.classList.add("highlight");
+            rowCount++;
+            
+             // Celda para la cantidad (con input number)
+            const celdaCantidad = nuevaFila.insertCell();
+            celdaCantidad.className = "input-cell";
+            
+            const inputCantidad = document.createElement("input");
+            inputCantidad.type = "number";
+            inputCantidad.id = "cantidad"
+            inputCantidad.name = "cantidad"+rowCount;
+            inputCantidad.min = "1";
+            inputCantidad.value = "1";
+            inputCantidad.className = "form-control";
+            inputCantidad.style = "max-width: 50px;"
+            inputCantidad.addEventListener("input", calcularTotales);
+            
+            celdaCantidad.appendChild(inputCantidad);
+            
+            // Celda para el nombre del producto (con select)
+            const celdaProducto = nuevaFila.insertCell();
+            celdaProducto.className = "input-cell";
+            
+            const selectProducto = document.createElement("select");
+            selectProducto.className = "form-select";
+            selectProducto.id = "producto"
+            selectProducto.name = "Producto" + rowCount;
+            
+            // Agregar opción vacía
+            const defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.textContent = "Seleccione un producto";
+            selectProducto.appendChild(defaultOption);
+            
+            // Agregar opciones de productos
+            fetch('/products')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(producto => {
+                        const option = document.createElement("option");
+                        option.value = producto.id;
+                        option.textContent = producto.nombre;
+                        option.name = producto.nombre;
+                        option.dataset.costo = producto.efectivo;
+                        option.dataset.ganancia = producto.ganancia;
+                        option.dataset.iva = producto.iva;
+                        selectProducto.appendChild(option);
+                    });
+                    // Event listener para cambio de selección
+                    selectProducto.addEventListener('change', function() {
+                        const selectedOption = this.options[this.selectedIndex];
+                        if (selectedOption.value) {
+                            // Actualizar precio con el valor del dataset
+                            const ganancia = parseFloat(selectedOption.dataset.ganancia);
+                            const iva = parseFloat(selectedOption.dataset.iva);
+                            inputPrecio.value = Math.round((parseFloat(selectedOption.dataset.costo)).toFixed(0) / 100) * 100;
+                            calcularTotales();
+                        } else {
+                            inputPrecio.value = "0.00";
+                        }
+                    });
+                });
+           
+
+            celdaProducto.appendChild(selectProducto);
+            
+            // Celda para el precio unitario (con input number)
+            const celdaPrecio = nuevaFila.insertCell();
+            celdaPrecio.className = "input-cell";
+            
+            const inputPrecio = document.createElement("input");
+            inputPrecio.type = "number";
+            inputPrecio.id = "precio"
+            inputPrecio.disabled = true;
+            inputPrecio.name = "precio[]"
+            inputPrecio.value = "0.00";
+            inputPrecio.className = "form-control";
+
+            
+            celdaPrecio.appendChild(inputPrecio);
+            
+            // Celda para el total (calculado automáticamente)
+            const celdaTotal = nuevaFila.insertCell();
+            celdaTotal.className = "align-middle";
+            celdaTotal.textContent = "$0.00";
+            celdaTotal.dataset.value = "0";
+            
+            // Celda para el botón de eliminar
+            const celdaAcciones = nuevaFila.insertCell();
+            celdaAcciones.className = "align-middle";
+            
+            const btnEliminar = document.createElement("button");
+            btnEliminar.className = "btn btn-danger btn-sm";
+            btnEliminar.innerHTML = 'x';
+            btnEliminar.onclick = function() {
+                cuerpoTabla.removeChild(nuevaFila);
+                calcularTotales();
+                reordenarNumeros();
+            };
+            
+            celdaAcciones.appendChild(btnEliminar);
+            
+            // Calcular totales después de agregar fila
+            calcularTotales();
+            
+            // Remover efecto de highlight después de la animación
+            setTimeout(() => {
+                nuevaFila.classList.remove("highlight");
+            }, 1500);
+        }
+        
+        function calcularTotales() {
+            const filas = document.querySelectorAll("#miTabla tbody tr");
+            let granTotal = 0;
+            let granTotalFactura = 0;
+            let granTotalTarjeta = 0;
+            
+            filas.forEach(fila => {
+                console.log(fila)
+                const cantidad = fila.querySelector('input[id="cantidad"]');
+                const precio = fila.querySelector('input[id="precio"]');
+                const totalCelda = fila.querySelector('td:nth-last-child(2)');
+                
+                if (cantidad && precio) {
+
+                    const total = parseFloat(cantidad.value) * parseFloat(precio.value || 0);
+                    totalCelda.textContent = `$${formatearNumero(total.toFixed(0))}`;
+                    totalCelda.dataset.value = total;
+                    granTotal += Math.round(total / 100) * 100;
+                    granTotalFactura += Math.round((total * 1.1) / 100) * 100;
+                    granTotalTarjeta += Math.round((total * 1.21) / 100) * 100;
+                }
+            });
+            
+            // Actualizar total general
+            document.getElementById("totalEfectivo").textContent = `Efectivo $${formatearNumero(granTotal.toFixed(0))}`;
+            document.getElementById("totalFactura").textContent = `Factura $${formatearNumero(granTotalFactura.toFixed(0))}`;
+            document.getElementById("totalTarjeta").textContent = `Tarjeta $${formatearNumero(granTotalTarjeta.toFixed(0))}`;
+        }
+        
+        function reordenarNumeros() {
+            const filas = document.querySelectorAll("#miTabla tbody tr");
+            filas.forEach((fila, index) => {
+                fila.cells[0].textContent = index + 1;
+            });
+            rowCount = filas.length;
+        }
+        
+        function guardarTabla() {
+            const filas = document.querySelectorAll("#miTabla tbody tr");
+            if (filas.length === 0) {
+                alert("No hay datos para guardar");
+                return;
+            }
+            
+            const datos = [];
+            filas.forEach(fila => {
+                const select = fila.querySelector('select[id="producto"]');
+                const selectedOption = select.options[select.selectedIndex];
+                const productoId = selectedOption.value;
+                const productoNombre = selectedOption.textContent;
+                const cantidad = fila.querySelector('input[id="cantidad"]')?.value || 0;
+                const precio = fila.querySelector('input[id="precio"]')?.value || 0;
+                const total = fila.cells[3].dataset.value || 0;
+                
+                if (productoId !== "") {
+                    datos.push({
+                    productoId,
+                    productoNombre,
+                    cantidad,
+                    precio,
+                    total
+                });
+                }
+            });
+
+            const cobro = document.querySelector("#cobro").value;
+            const trabajo = document.querySelector("#trabajo").value;
+            const checkboxEfectivo = document.querySelector("#checkEfectivo");
+            const checkboxFactura = document.querySelector("#checkFactura");
+            const checkboxTarjeta = document.querySelector("#checkTarjeta");
+            const checks = document.querySelectorAll(".form-check-input");
+
+            checks.forEach(check => {
+                if (check.checked) {
+                    datos.push({
+                        "Pago": check.value,
+                    });
+                }
+            });
+
+
+            if (cobro.value !== "" && trabajo.value !== "") {
+                datos.push({
+                cobro,
+                trabajo
+                });
+            }
+            
+            
+            if (datos.length !== 0) {
+                fetch('/guardar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ datos })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Respuesta de Flask:', data);
+                    showBootstrapAlert('Datos guardados con éxito!', type = 'success');
+                });
+            } else {
+                showBootstrapAlert('No hay productos agregados')
+            }
+            
+
+            
+        }
+        
+        function resetTabla() {
+            if (confirm("¿Estás seguro de que deseas eliminar todas las filas?")) {
+                const cuerpoTabla = document.querySelector("#miTabla tbody");
+                cuerpoTabla.innerHTML = "";
+                document.getElementById("totalGeneral").textContent = "$0.00";
+                rowCount = 0;
+            }
+        }
+
+        function formatearNumero(numero) {
+            // Convertir a string y separar parte entera y decimal
+            const parteEntera = numero;
+            
+            // Formatear parte entera con comas
+            const parteEnteraFormateada = parteEntera
+                .split('')
+                .reverse()
+                .reduce((acc, digito, index) => {
+                    return (index % 3 === 0 && index !== 0) 
+                        ? digito + ',' + acc 
+                        : digito + acc;
+                }, '');
+            
+            return parteEnteraFormateada;
+        }
+
+        function showBootstrapAlert(message, type = 'danger') {
+            const alertDiv = document.getElementById('bootstrapAlert');
+            
+            // Configura el mensaje y el tipo (ej: 'danger', 'success', 'warning')
+            alertDiv.textContent = message;
+            alertDiv.className = `alert alert-${type} d-block`; // Muestra el alert
+
+            // Opcional: Auto-ocultar después de 5 segundos
+            setTimeout(() => {
+                alertDiv.classList.add('d-none');
+            }, 5000);
+        }
+document.addEventListener('DOMContentLoaded', function() {
+    // Escucha cuando se abre cualquier modal de detalle
+    document.querySelectorAll('.btn-detalle').forEach(button => {
+        button.addEventListener('click', function() {
+            const ventaId = this.getAttribute('data-venta-id');
+            const modalBody = document.getElementById(`items-body-${ventaId}`);
+            
+            // Hacer la petición AJAX
+            fetch(`/get_venta_items/${ventaId}`)
+                .then(response => response.json())
+                .then(items => {
+                    if (items.length > 0) {
+                        let html = '';
+                        items.forEach(item => {
+                            html += `
+                                <tr>
+                                    <td>${item.nombre}</td>
+                                    <td>${item.cantidad}</td>
+                                    <td>${item.valor}</td>
+                                </tr>
+                            `;
+                        });
+                        modalBody.innerHTML = html;
+                    } else {
+                        modalBody.innerHTML = `
+                            <tr>
+                                <td colspan="3" class="text-center">No hay productos registrados para esta venta</td>
+                            </tr>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    modalBody.innerHTML = `
+                        <tr>
+                            <td colspan="3" class="text-center text-danger">Error al cargar los productos</td>
+                        </tr>
+                    `;
+                    console.error('Error:', error);
+                });
+        });
+    });
+});
+</script>
 {% endblock %}
