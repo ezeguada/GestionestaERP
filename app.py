@@ -145,7 +145,8 @@ def logout():
 # Ruta API para obtener productos
 @app.route('/products')
 def get_products():
-    productos = db.execute('SELECT * FROM productos')
+    productos = db.execute('SELECT productos.id, productos.nombre, productos.efectivo, stock.\"1\", stock.\"2\" FROM productos JOIN stock ON stock.id_producto = productos.id')
+
     return jsonify(productos)
 
 
@@ -263,7 +264,9 @@ def cargadiaria():
     cobro = db.execute("SELECT * FROM metodo_cobro")
     tipotrabajo = db.execute("SELECT * FROM tipo_trabajo")
 
-    return render_template("cargadiaria.html", ventas=ventas, trabajos=tipotrabajo, cobros=cobro, nombre="Mi Negocio")
+    locales = db.execute("SELECT * FROM negocios")
+
+    return render_template("cargadiaria.html", locales = locales, ventas=ventas, trabajos=tipotrabajo, cobros=cobro, nombre="Mi Negocio")
 
 @app.route("/get_venta_items/<int:venta_id>")
 @login_required

@@ -22,23 +22,31 @@
                 <div class="accordion-body">
                     
                     <div class="row mt-3">
-                <div class="col">
-                    <select class="form-select" name="trabajo" id="trabajo" required>
-                        <option value="" selected>Tipo de trabajo</option>
-                        {% for trabajo in trabajos %}
-                        <option value="{{ trabajo.id }}">{{ trabajo.nombre }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col">
-                    <select class="form-select" name="cobro" id="cobro" required>
-                        <option value="" selected>Tipo de cobro</option>
-                        {% for cobro in cobros %}
-                        <option value="{{ cobro.id }}">{{ cobro.COBRO }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
+                        <div class="col">
+                            <select class="form-select" name="cobro" id="cobro" required>
+                                <option value="" selected>Tipo de cobro</option>
+                                {% for cobro in cobros %}
+                                <option value="{{ cobro.id }}">{{ cobro.COBRO }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col">
+                            <select class="form-select" name="trabajo" id="trabajo" required>
+                                <option value="" selected>Tipo de trabajo</option>
+                                {% for trabajo in trabajos %}
+                                <option value="{{ trabajo.id }}">{{ trabajo.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col">
+                            <select class="form-select" name="local" id="local" required>
+                                <option value="" selected>Local</option>
+                                {% for local in locales %}
+                                <option value="{{ local.nrosucursal }}">{{ local.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
             
             
         
@@ -128,7 +136,7 @@
                     <tr>
                         <td scope="row">{{ venta["fecha"] }}</td>
                         <td>{{ venta["COBRO"] }}</td>
-                        <td>$ {{ venta["valor"] | round(2) }}</td>
+                        <td name="valorventa">{{ venta["valor"] | round(2) }}</td>
                         <td>{{ venta["nombre"] }}</td>
                         <td>
                             <!-- Botón que abre el modal con ID único -->
@@ -183,6 +191,7 @@
 </div>
 
 <script>
+
 let rowCount = 0;
 
         // Inicialización al cargar la página
@@ -246,20 +255,33 @@ let rowCount = 0;
                         option.name = producto.nombre;
                         option.dataset.costo = producto.efectivo;
                         option.dataset.ganancia = producto.ganancia;
+                        option.dataset.stock1 = producto["1"];
+                        option.dataset.stock2 = producto["2"];
                         option.dataset.iva = producto.iva;
                         selectProducto.appendChild(option);
                     });
                     // Event listener para cambio de selección
                     selectProducto.addEventListener('change', function() {
                         const selectedOption = this.options[this.selectedIndex];
+                        const localSelected = document.querySelector("[name=local]");
                         if (selectedOption.value) {
                             // Actualizar precio con el valor del dataset
-                            const ganancia = parseFloat(selectedOption.dataset.ganancia);
-                            const iva = parseFloat(selectedOption.dataset.iva);
+                            //const ganancia = parseFloat(selectedOption.dataset.ganancia);
+                            //const iva = parseFloat(selectedOption.dataset.iva);
                             inputPrecio.value = Math.round((parseFloat(selectedOption.dataset.costo)).toFixed(0) / 100) * 100;
                             calcularTotales();
                         } else {
                             inputPrecio.value = "0.00";
+                        }
+                        if (selectedOption.value && localSelected.value) {
+                            if (localSelected.value === 1) {
+                                inputStock.value = parseInt(selectedOption.dataset.stock1);
+                            }
+                            if (localSelected.value === 2){
+                                inputStock.value = parseInt(selectedOption.dataset.stock2);
+                            }
+                        } else {
+                            inputStock.value = "-";
                         }
                     });
                 });
@@ -278,9 +300,23 @@ let rowCount = 0;
             inputPrecio.name = "precio[]"
             inputPrecio.value = "0.00";
             inputPrecio.className = "form-control";
-
             
             celdaPrecio.appendChild(inputPrecio);
+
+
+            // Celda para el stock
+            const celdaStock = nuevaFila.insertCell();
+            celdaPrecio.className = "input-cell";
+            
+            const inputStock = document.createElement("input");
+            inputStock.type = "number";
+            inputStock.id = "stock"
+            inputStock.disabled = true;
+            inputStock.name = "stock[]"
+            //inputStock.value = "0.00";
+            inputStock.className = "form-control";
+            
+            celdaPrecio.appendChild(inputStock);
             
             // Celda para el total (calculado automáticamente)
             const celdaTotal = nuevaFila.insertCell();
@@ -433,7 +469,8 @@ let rowCount = 0;
 
         function formatearNumero(numero) {
             // Convertir a string y separar parte entera y decimal
-            const parteEntera = numero;
+            const numeroStr = numero.toString();
+            const parteEntera = numeroStr;
             
             // Formatear parte entera con comas
             const parteEnteraFormateada = parteEntera
@@ -460,6 +497,9 @@ let rowCount = 0;
                 alertDiv.classList.add('d-none');
             }, 5000);
         }
+
+
+
 document.addEventListener('DOMContentLoaded', function() {
     // Escucha cuando se abre cualquier modal de detalle
     document.querySelectorAll('.btn-detalle').forEach(button => {
@@ -502,5 +542,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+const valorventa = document.querySelectorAll("[name=valorventa]")
+valorventa.forEach(valor => {
+    const valorformateado = formatearNumero(parseFloat(valor.innerHTML));
+    valor.innerHTML = valorformateado;
+});
+
 </script>
 {% endblock %}
