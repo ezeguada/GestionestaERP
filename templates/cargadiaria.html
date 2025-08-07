@@ -62,6 +62,7 @@
                         </th>
                         <th>Producto</th>
                         <th>Precio</th>
+                        <th>Stock</th>
                         <th>Total</th>
                         <th>Borrar</th>
                     </tr>
@@ -269,20 +270,31 @@ let rowCount = 0;
                             //const ganancia = parseFloat(selectedOption.dataset.ganancia);
                             //const iva = parseFloat(selectedOption.dataset.iva);
                             inputPrecio.value = Math.round((parseFloat(selectedOption.dataset.costo)).toFixed(0) / 100) * 100;
+                            if (localSelected.value == "1") {
+                                inputStock.value = parseInt(selectedOption.dataset.stock1);
+                                console.log(selectedOption.dataset.stock1);
+                            }
+                            if (localSelected.value == "2"){
+                                inputStock.value = parseInt(selectedOption.dataset.stock2);
+                                console.log(selectedOption.dataset.stock2);
+                            }
+                            //inputStock.value = parseInt(selectedOption.dataset.stock1);
                             calcularTotales();
                         } else {
                             inputPrecio.value = "0.00";
                         }
-                        if (selectedOption.value && localSelected.value) {
-                            if (localSelected.value === 1) {
+                        /*if (true) { //selectedOption.value && localSelected.value
+                            if (localSelected.value == "1") {
                                 inputStock.value = parseInt(selectedOption.dataset.stock1);
+                                console.log(selectedOption.dataset.stock1);
                             }
-                            if (localSelected.value === 2){
+                            if (localSelected.value == "2"){
                                 inputStock.value = parseInt(selectedOption.dataset.stock2);
+                                console.log(selectedOption.dataset.stock2);
                             }
                         } else {
-                            inputStock.value = "-";
-                        }
+                            inputStock.value = "10";
+                        }*/
                     });
                 });
            
@@ -306,17 +318,17 @@ let rowCount = 0;
 
             // Celda para el stock
             const celdaStock = nuevaFila.insertCell();
-            celdaPrecio.className = "input-cell";
+            celdaStock.className = "input-cell";
             
             const inputStock = document.createElement("input");
             inputStock.type = "number";
             inputStock.id = "stock"
             inputStock.disabled = true;
             inputStock.name = "stock[]"
-            //inputStock.value = "0.00";
+            inputStock.value = "0";
             inputStock.className = "form-control";
             
-            celdaPrecio.appendChild(inputStock);
+            celdaStock.appendChild(inputStock);
             
             // Celda para el total (calculado automáticamente)
             const celdaTotal = nuevaFila.insertCell();
