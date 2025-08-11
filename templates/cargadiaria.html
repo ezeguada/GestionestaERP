@@ -40,7 +40,7 @@
                         </div>
                         <div class="col">
                             <select class="form-select" name="local" id="local" required>
-                                <option value="" selected>Local</option>
+                                <option value="0" selected>Local</option>
                                 {% for local in locales %}
                                 <option value="{{ local.nrosucursal }}">{{ local.nombre }}</option>
                                 {% endfor %}
@@ -270,31 +270,13 @@ let rowCount = 0;
                             //const ganancia = parseFloat(selectedOption.dataset.ganancia);
                             //const iva = parseFloat(selectedOption.dataset.iva);
                             inputPrecio.value = Math.round((parseFloat(selectedOption.dataset.costo)).toFixed(0) / 100) * 100;
-                            if (localSelected.value == "1") {
-                                inputStock.value = parseInt(selectedOption.dataset.stock1);
-                                console.log(selectedOption.dataset.stock1);
-                            }
-                            if (localSelected.value == "2"){
-                                inputStock.value = parseInt(selectedOption.dataset.stock2);
-                                console.log(selectedOption.dataset.stock2);
-                            }
-                            //inputStock.value = parseInt(selectedOption.dataset.stock1);
                             calcularTotales();
+                            // Actualizar stock dependiendo el producto seleccionado
+                            modificarStock(localSelected, selectedOption, inputStock);     
+                     
                         } else {
-                            inputPrecio.value = "0.00";
+                            inputPrecio.value = "0";
                         }
-                        /*if (true) { //selectedOption.value && localSelected.value
-                            if (localSelected.value == "1") {
-                                inputStock.value = parseInt(selectedOption.dataset.stock1);
-                                console.log(selectedOption.dataset.stock1);
-                            }
-                            if (localSelected.value == "2"){
-                                inputStock.value = parseInt(selectedOption.dataset.stock2);
-                                console.log(selectedOption.dataset.stock2);
-                            }
-                        } else {
-                            inputStock.value = "10";
-                        }*/
                     });
                 });
            
@@ -324,7 +306,7 @@ let rowCount = 0;
             inputStock.type = "number";
             inputStock.id = "stock"
             inputStock.disabled = true;
-            inputStock.name = "stock[]"
+            inputStock.name = "stock"+rowCount
             inputStock.value = "0";
             inputStock.className = "form-control";
             
@@ -559,6 +541,50 @@ const valorventa = document.querySelectorAll("[name=valorventa]")
 valorventa.forEach(valor => {
     const valorformateado = formatearNumero(parseFloat(valor.innerHTML));
     valor.innerHTML = valorformateado;
+});
+
+// Funcion para actualizar el stock dependiendo el producto y local seleccionado
+function modificarStock(localm, opcionProd, entradastock) {
+    if (local.value === "0") {
+        entradastock.value = parseInt(0);
+    }
+    if (local.value === "1") {
+        entradastock.value = parseInt(opcionProd.dataset.stock1);
+    }
+    if (local.value === "2"){
+        entradastock.value = parseInt(opcionProd.dataset.stock2);
+    }
+    if (local.value === "3"){
+        entradastock.value = parseInt(opcionProd.dataset.stock3);
+    }
+    if (local.value === "4"){
+        entradastock.value = parseInt(opcionProd.dataset.stock4);
+    }
+    if (local.value === "5"){
+        entradastock.value = parseInt(opcionProd.dataset.stock5);
+    }
+}
+
+// Actualiza stock cuando cambia el local
+const selectLocal = document.querySelector("[name=local]");
+selectLocal.addEventListener("change", function() {
+    const localSelected = this.options[this.selectedIndex];
+    //const selectedSelect = document.querySelectorAll("#producto");
+    const stockinput = document.querySelectorAll("#stock");
+
+    stockinput.forEach((cada, index) => {
+        //console.log(cada);
+        //console.log(index);
+        const opcionseleccionada = document.querySelector(`[name=Producto${index+1}]`);
+        console.log(opcionseleccionada.options[opcionseleccionada.selectedIndex]);
+        const opcionacha = opcionseleccionada.options[opcionseleccionada.selectedIndex];
+        modificarStock(localSelected, opcionacha, cada);
+        if (cada.value === "0") {
+            cada.style.background = "red";
+        } else {
+            cada.style.background = "none";
+        }
+    });
 });
 
 </script>
