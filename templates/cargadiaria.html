@@ -272,8 +272,7 @@ let rowCount = 0;
                             inputPrecio.value = Math.round((parseFloat(selectedOption.dataset.costo)).toFixed(0) / 100) * 100;
                             calcularTotales();
                             // Actualizar stock dependiendo el producto seleccionado
-                            modificarStock(localSelected, selectedOption, inputStock);     
-                     
+                            modificarStock(localSelected, selectedOption, inputStock);
                         } else {
                             inputPrecio.value = "0";
                         }
@@ -394,7 +393,7 @@ let rowCount = 0;
                 const productoNombre = selectedOption.textContent;
                 const cantidad = fila.querySelector('input[id="cantidad"]')?.value || 0;
                 const precio = fila.querySelector('input[id="precio"]')?.value || 0;
-                const total = fila.cells[3].dataset.value || 0;
+                const total = fila.cells[4].dataset.value || 0;
                 
                 if (productoId !== "") {
                     datos.push({
