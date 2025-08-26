@@ -145,7 +145,8 @@ def logout():
 # Ruta API para obtener productos
 @app.route('/products')
 def get_products():
-    productos = db.execute('SELECT productos.id, productos.nombre, productos.efectivo, stock.\"1\", stock.\"2\" FROM productos JOIN stock ON stock.id_producto = productos.id')
+    # Une la tabla de productos con su respectivo stock
+    productos = db.execute('SELECT productos.id, productos.nombre, productos.efectivo, stock.local_1, stock.local_2 FROM productos JOIN stock ON stock.id_producto = productos.id')
 
     return jsonify(productos)
 
@@ -153,6 +154,7 @@ def get_products():
 @app.route('/guardar', methods=["GET", "POST"])
 @csrf.exempt
 def guardar():
+    local = 0
     ventas = {
         "id_empresa": 1,
         "fecha": datetime.now().strftime("%d/%m/%Y"),
@@ -162,64 +164,60 @@ def guardar():
         }
 
     if request.method == "POST":
+        # Captura los datos del front en forma de json
         datos = request.get_json()
         #print(datos)
         for dato in datos["datos"]:
             if "productoId" in dato:
+                # Suma todos los precios de los items de la compra
                 ventas["valor"] += int(dato["total"])
             elif "cobro" in dato:
+                # Guarda el metodo de cobro, el tipo de trabajo y el número de sucursal
                 ventas["cobro"] = dato["cobro"]
                 ventas["tipotrabajo"] = dato["trabajo"]
+                local = dato["local"]
             elif "Pago" in dato:
+                # Calcula el valor real dependiendo la forma de pago
                 if dato["Pago"] == "Factura":
                     ventas["valor"] = ventas["valor"] * 1.1
                 elif dato["Pago"] == "Tarjeta":
                     ventas["valor"] = ventas["valor"] * 1.1 * 1.1
 
-        print(ventas)
-        #print("AAAAAAAAAALGOOOOOOOOOOOO")
-        valores = (
-            ventas['id_empresa'],
-            ventas['fecha'],
-            ventas['cobro'],
-            ventas['valor'],
-            ventas['tipotrabajo']
-        )
-
+        # Guarda la venta en la tabla de ventas (solo la venta total, no por items)
         db.execute("INSERT INTO ventas (id_empresa, fecha, cobro, valor, tipotrabajo) VALUES (?, ?, ?, ?, ?)", ventas['id_empresa'],
                                                                                                                 ventas['fecha'],
                                                                                                                 ventas['cobro'],
                                                                                                                 ventas['valor'],
                                                                                                                 ventas['tipotrabajo'])
 
+        # Lista para guardar las tuplas de productos para cargar luego en la tabla venta_items
         productos = []
-        record = {
-            "id_venta":0,
-            "id_producto":0,
-            "cantidad":0,
-            "valor":0
-        }
+        # Localizamos el último registro guardado en la base de datos de ventas para conocer su id
         registro = db.execute("SELECT * FROM ventas ORDER BY id DESC LIMIT 1")
-        print(registro[0]["id"])
-        print("AAAAAAAAAALGOOOOOOOOOOOO")
-        record["id_venta"] = registro[0]["id"]
+        # Se guarda el id de la venta
+        id_venta = registro[0]["id"]
+
         for dato in datos["datos"]:
+            # Recorremos todos los items de la venta y los vamos guardando en una tupla llamada recordo
+            # Todas las tuplas con todos los productos se guardan en una lista
             if "productoId" in dato:
-                record["id_producto"] = dato["productoId"]
-                record["cantidad"] = dato["cantidad"]
-                record["valor"] = dato["total"]
-
+                # Tupla con valores de cada item
                 recordo = (
-                    record["id_venta"],
-                    record["id_producto"],
-                    record["cantidad"],
-                    record["valor"]
+                    id_venta,
+                    dato["productoId"],
+                    dato["cantidad"],
+                    dato["total"]
                 )
-
+                # Se agrega cada item a la lista
                 productos.append(recordo)
 
-        print(record)
+                # Obtien el stock actual del producto seleccionado en el local seleccionado
+                stockactual = db.execute(f"SELECT local_{local} FROM stock WHERE id_producto = ?", dato["productoId"])[0]
+                # Actualiza el valor del stock del producto seleccionado en el local seleccionado
+                db.execute(f"UPDATE stock SET local_{local} = ? WHERE id_producto = ?",stockactual[f"local_{local}"]-int(dato["cantidad"]),dato["productoId"])
 
+        # Se guardan en la tabla venta_items todos los items que componen la venta por separado
+        # Uso esta forma porque con la libreria de cs50 no podía cargar una lista de tuplas y no encontre la forma de hacerlo
         conexion = sqlite3.connect("database.db")
         cursor = conexion.cursor()
         cursor.executemany('''
@@ -227,8 +225,6 @@ def guardar():
                 VALUES (?, ?, ?, ?)
                 ''', productos)
         conexion.commit()
-
-        #db.execute("INSERT INTO venta_items (id_venta, id_producto, cantidad, valor) VALUES (?, ?, ?, ?)", productos)
 
     return jsonify(ventas, productos)
 
@@ -241,6 +237,7 @@ def pruebas():
     tipotrabajo = db.execute("SELECT * FROM tipo_trabajo")
 
     return render_template("pruebas.html", productos = productos, trabajos=tipotrabajo, cobros=cobro)
+
 
 @app.route("/prueba", methods=["GET", "POST"])
 @login_required
@@ -268,13 +265,11 @@ def cargadiaria():
 
     return render_template("cargadiaria.html", locales = locales, ventas=ventas, trabajos=tipotrabajo, cobros=cobro, nombre="Mi Negocio")
 
+
 @app.route("/get_venta_items/<int:venta_id>")
 @login_required
 def get_venta_items(venta_id):
     items = db.execute("SELECT * FROM venta_items INNER JOIN productos ON productos.id = venta_items.id_producto WHERE venta_items.id_venta = ?", venta_id)
-    #print(items)
-    #items = db.execute("SELECT * FROM venta_items WHERE id_venta = ?", venta_id)
-    #items = db.execute("SELECT * FROM venta_items INNER JOIN productos ON venta_items.id_producto = productos.id WHERE venta_items.id_venta = ?", venta_id)
     return jsonify(items)
 
 

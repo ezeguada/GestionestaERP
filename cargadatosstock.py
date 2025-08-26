@@ -36,7 +36,7 @@ print(filas)
 
 #cursor.executemany("INSERT OR REPLACE INTO stock (id_empresa, id_producto, 1, 2) VALUES (?, ?, ?, ?)", filas)
         
-cursor.executemany("INSERT OR REPLACE INTO stock (id_empresa, id_producto, \"1\", \"2\") VALUES (?, ?, ?, ?)", filas)
+cursor.executemany("INSERT OR REPLACE INTO stock (id_empresa, id_producto, local_1, local_2) VALUES (?, ?, ?, ?)", filas)
 
 # 5. Confirmar cambios
 conexion.commit()

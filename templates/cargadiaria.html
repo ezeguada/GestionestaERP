@@ -250,14 +250,15 @@ let rowCount = 0;
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(producto => {
+                        console.log(producto["local_1"]);
                         const option = document.createElement("option");
                         option.value = producto.id;
                         option.textContent = producto.nombre;
                         option.name = producto.nombre;
                         option.dataset.costo = producto.efectivo;
                         option.dataset.ganancia = producto.ganancia;
-                        option.dataset.stock1 = producto["1"];
-                        option.dataset.stock2 = producto["2"];
+                        option.dataset.stock1 = producto["local_1"];
+                        option.dataset.stock2 = producto["local_2"];
                         option.dataset.iva = producto.iva;
                         selectProducto.appendChild(option);
                     });
@@ -273,6 +274,11 @@ let rowCount = 0;
                             calcularTotales();
                             // Actualizar stock dependiendo el producto seleccionado
                             modificarStock(localSelected, selectedOption, inputStock);
+                            if (inputStock.value === "0" && localSelected.value !== "0") {
+                                inputStock.style.background = "red";
+                            } else {
+                                inputStock.style.background = "none";
+                            }
                         } else {
                             inputPrecio.value = "0";
                         }
@@ -408,6 +414,7 @@ let rowCount = 0;
 
             const cobro = document.querySelector("#cobro").value;
             const trabajo = document.querySelector("#trabajo").value;
+            const local = document.querySelector("[name=local]").value;
             const checkboxEfectivo = document.querySelector("#checkEfectivo");
             const checkboxFactura = document.querySelector("#checkFactura");
             const checkboxTarjeta = document.querySelector("#checkTarjeta");
@@ -425,7 +432,8 @@ let rowCount = 0;
             if (cobro.value !== "" && trabajo.value !== "") {
                 datos.push({
                 cobro,
-                trabajo
+                trabajo,
+                local
                 });
             }
             
@@ -578,7 +586,7 @@ selectLocal.addEventListener("change", function() {
         console.log(opcionseleccionada.options[opcionseleccionada.selectedIndex]);
         const opcionacha = opcionseleccionada.options[opcionseleccionada.selectedIndex];
         modificarStock(localSelected, opcionacha, cada);
-        if (cada.value === "0") {
+        if (cada.value === "0" && localSelected.value !== "0") {
             cada.style.background = "red";
         } else {
             cada.style.background = "none";
