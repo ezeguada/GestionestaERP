@@ -185,10 +185,7 @@ def guardar():
 
         # Guarda la venta en la tabla de ventas (solo la venta total, no por items)
         db.execute("INSERT INTO ventas (id_empresa, fecha, cobro, valor, tipotrabajo) VALUES (?, ?, ?, ?, ?)", ventas['id_empresa'],
-                                                                                                                ventas['fecha'],
-                                                                                                                ventas['cobro'],
-                                                                                                                ventas['valor'],
-                                                                                                                ventas['tipotrabajo'])
+                    ventas['fecha'], ventas['cobro'], ventas['valor'], ventas['tipotrabajo'])
 
         # Lista para guardar las tuplas de productos para cargar luego en la tabla venta_items
         productos = []
@@ -288,7 +285,9 @@ def listaprecios():
 @app.route("/stock", methods=["GET", "POST"])
 @login_required
 def stock():
-    return render_template("stock.html", nombre="Control de stock")
+    items = db.execute("SELECT productos.nombre, stock.local_1, stock.local_2 FROM productos JOIN stock ON stock.id_producto = productos.id")
+    # SELECT productos.nombre, stock.local_1, stock.local_2 FROM productos JOIN stock ON stock.id_producto = producto.id
+    return render_template("stock.html", items=items, nombre="Control de stock")
 
 
 @app.route("/compras", methods=["GET", "POST"])

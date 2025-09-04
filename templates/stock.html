@@ -25,21 +25,29 @@ ITEM	STOCK INICIAL	INGRESOS	SALIDAS	STOCK FINAL
                     <th scope="col">Stock final</th>
                     <th scope="col">Stock L1</th>
                     <th scope="col">Stock L2</th>
+                    <th scope="col">Acción</th>
                 </tr>
             </thead>
             <tbody>
 
 
                 <!-- Parte de la tabla que hay que ITERAR con la base de datos de mercadería --> 
+                {% for item in items %}
                 <tr>
-                    <td scope="row">ACY101</td>
-                    <td>10</td>
-                    <td>0</td>
-                    <td>2</td>
-                    <td>8</td>
-                    <td>4</td>
-                    <td>4</td>
+                    <td scope="row">{{ item.nombre }}</td>
+                    <td scope="row">***</td>
+                    <td scope="row">***</td>
+                    <td scope="row">***</td>
+                    <td scope="row">***</td>
+                    <td scope="row">{{ item.local_1 }}</td>
+                    <td scope="row">{{ item.local_2 }}</td>
+                    <td scope="row">
+                        <button type="button" class="btn btn-dark">
+                            Editar
+                        </button>
+                    </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
